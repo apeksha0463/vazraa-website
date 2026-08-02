@@ -49,7 +49,7 @@ services:
       - ./backend/.env
 
     ports:
-      - "3002:3002"
+      - "5000:5000"
 
     networks:
       - vazraa-net
