@@ -16,6 +16,23 @@ version: "3.9"
 
 services:
 
+  # ── Database (MongoDB) ──────────────────────────────────────────────────────
+  mongo:
+    image: mongo:6.0
+    container_name: vazraa-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - vazraa-net
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   # ── Backend (Node.js / Express) ─────────────────────────────────────────────
   backend:
     build:
@@ -23,17 +40,16 @@ services:
       dockerfile: Dockerfile
     container_name: vazraa-backend
     restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
 
     # Use backend/.env as intentionally designed for the project configurations
     env_file:
       - ./backend/.env
 
-    environment:
-      NODE_ENV: production
-
-    # Backend is NOT exposed to the host — only the frontend container reaches it
-    expose:
-      - "5000"
+    ports:
+      - "3002:3002"
 
     networks:
       - vazraa-net
@@ -92,3 +108,7 @@ networks:
   vazraa-net:
     driver: bridge
     name: vazraa-net
+
+# ── Volumes ───────────────────────────────────────────────────────────────────
+volumes:
+  mongo-data:
