@@ -24,8 +24,9 @@ services:
     container_name: vazraa-backend
     restart: unless-stopped
 
+    # Use backend/.env as intentionally designed for the project configurations
     env_file:
-      - .env
+      - ./backend/.env
 
     environment:
       NODE_ENV: production
