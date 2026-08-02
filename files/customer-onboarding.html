@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Onboarding - Vazraa Industrial Solutions</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- ===== HEADER / NAVBAR ===== -->
+<div id="site-header"></div>
+
+<main class="page-wrap">
+  <div class="container">
+    <div class="page-header">
+      <h1>Complete Your Profile</h1>
+      <p>Just a few more details and you're ready to book your first ride.</p>
+    </div>
+
+    <div class="onboarding-card" id="customerOnboardingCard">
+      <form class="form-grid" id="customerForm" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label for="custName">Full Name</label>
+            <input type="text" id="custName" required>
+          </div>
+          <div class="field">
+            <label for="custPhone">Phone Number</label>
+            <input type="tel" id="custPhone" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="custEmail">Email Address</label>
+          <input type="email" id="custEmail" required>
+        </div>
+
+        <div class="field">
+          <label for="custAddress">Home / Pickup Address</label>
+          <textarea id="custAddress" placeholder="e.g. #221, Tara Niwas, Shantinagar, Bokaro" required></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="custVehiclePref">Preferred Vehicle Type</label>
+            <select id="custVehiclePref">
+              <option>No preference</option>
+              <option>Cars & Sedans</option>
+              <option>Bikes & Scooters</option>
+              <option>Buses</option>
+              <option>Commercial Vehicles</option>
+              <option>Vans & Minibuses</option>
+              <option>EV Vehicles</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="custUse">Primary Use</label>
+            <select id="custUse">
+              <option>Daily commute</option>
+              <option>Occasional local trips</option>
+              <option>Outstation travel</option>
+              <option>Corporate travel</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="custTerms" required>
+          <label for="custTerms">I agree to the <a href="#">Terms & Conditions</a>.</label>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--submit">Finish Setup <i class="fas fa-arrow-right"></i></button>
+      </form>
+
+      <div class="success-box" id="customerSuccess" style="display:none;">
+        <div class="icon-circle"><i class="fas fa-check"></i></div>
+        <h3>You're all set!</h3>
+        <p>Your profile is ready. Let's find you a ride.</p>
+        <a href="book-ride.html" class="btn btn--primary">Book Your First Ride</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<div id="site-footer"></div>
+
+<script src="api.config.js"></script>
+<script src="script.js"></script>
+<script src="include.js"></script>
+<script src="onboarding.js"></script>
+</body>
+</html>

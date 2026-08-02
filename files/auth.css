@@ -1,0 +1,264 @@
+/* =========================================================
+   auth.css — shared styling for login, signup, onboarding,
+   and booking pages. Loaded IN ADDITION to style.css.
+   Reuses the same CSS variables defined in style.css (:root)
+========================================================= */
+
+/* ---- Generic page wrapper ---- */
+.page-wrap {
+  min-height: calc(100vh - 74px);
+  background: var(--gray-100);
+  padding: 48px 0 72px;
+}
+
+.page-header { text-align: center; margin-bottom: 36px; }
+.page-header h1 { font-size: 28px; margin-bottom: 8px; }
+.page-header p { color: var(--gray-600); font-size: 14px; }
+
+/* ---- Auth split card (login / signup) ---- */
+.auth-split {
+  max-width: 980px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}
+.auth-visual {
+  background: linear-gradient(135deg, var(--blue-900), #000);
+  color: #fff;
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+.auth-visual h2 { color: #fff; font-size: 24px; }
+.auth-visual p { color: rgba(255,255,255,.75); font-size: 14px; line-height: 1.6; }
+.auth-visual ul { margin-top: 12px; display: flex; flex-direction: column; gap: 12px; }
+.auth-visual ul li { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: rgba(255,255,255,.9); }
+.auth-visual ul li i { color: var(--blue-700); }
+
+.auth-form { padding: 48px 40px; }
+.auth-form h2 { font-size: 22px; margin-bottom: 6px; }
+.auth-form > p.sub { color: var(--gray-600); font-size: 13.5px; margin-bottom: 26px; }
+
+/* ---- Role toggle (Customer / Driver) ---- */
+.role-toggle {
+  display: flex;
+  background: var(--gray-100);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+.role-toggle button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--gray-600);
+  font-family: inherit;
+}
+.role-toggle button.active {
+  background: var(--blue-900);
+  color: var(--blue-700);
+}
+
+/* ---- Form fields (extends .field from style.css) ---- */
+.form-grid { display: flex; flex-direction: column; gap: 18px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid .field label { font-size: 12.5px; }
+.form-grid .field input,
+.form-grid .field select,
+.form-grid .field textarea {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  width: 100%;
+}
+.form-grid .field textarea { resize: vertical; min-height: 90px; }
+.form-grid .field input:focus,
+.form-grid .field select:focus,
+.form-grid .field textarea:focus { outline: none; border-color: var(--blue-700); }
+
+.field--password { position: relative; }
+.field--password .toggle-password {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  color: var(--gray-400);
+  font-size: 15px;
+}
+
+.checkbox-row { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--gray-600); }
+.checkbox-row input { margin-top: 3px; }
+.checkbox-row a { color: var(--blue-700); font-weight: 600; }
+
+.form-error { color: #d64545; font-size: 12px; margin-top: -10px; display: none; }
+.form-error.show { display: block; }
+
+.auth-form .btn--submit { width: 100%; padding: 13px; font-size: 14.5px; margin-top: 6px; }
+
+.auth-switch { text-align: center; font-size: 13.5px; color: var(--gray-600); margin-top: 22px; }
+.auth-switch a { color: var(--blue-900); font-weight: 700; text-decoration: underline; }
+
+/* ---- Onboarding stepper ---- */
+.onboarding-card {
+  max-width: 760px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px;
+}
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 36px;
+  position: relative;
+}
+.stepper::before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  left: 6%;
+  right: 6%;
+  height: 2px;
+  background: var(--border);
+  z-index: 0;
+}
+.step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+.step-circle {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--border);
+  color: var(--gray-400);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  transition: all .2s ease;
+}
+.step-label { font-size: 11.5px; color: var(--gray-400); font-weight: 600; text-align: center; }
+.step.active .step-circle { background: var(--blue-900); border-color: var(--blue-900); color: var(--blue-700); }
+.step.active .step-label { color: var(--blue-900); }
+.step.done .step-circle { background: var(--green); border-color: var(--green); color: #fff; }
+.step.done .step-label { color: var(--green); }
+
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+.step-panel h3 { font-size: 18px; margin-bottom: 4px; }
+.step-panel > p.sub { color: var(--gray-600); font-size: 13.5px; margin-bottom: 22px; }
+
+.step-actions { display: flex; justify-content: space-between; margin-top: 30px; }
+
+/* ---- File upload boxes (driver documents) ---- */
+.upload-box {
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease;
+}
+.upload-box:hover { border-color: var(--blue-700); background: var(--blue-100); }
+.upload-box i { font-size: 22px; color: var(--blue-700); margin-bottom: 8px; }
+.upload-box p { font-size: 13px; color: var(--gray-600); }
+.upload-box span { font-size: 11.5px; color: var(--gray-400); }
+.upload-box input[type="file"] { display: none; }
+.upload-box.has-file { border-style: solid; border-color: var(--green); background: #eafaf3; }
+.upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ---- Review summary (onboarding step 4) ---- */
+.review-list { display: flex; flex-direction: column; gap: 10px; }
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13.5px;
+}
+.review-row span:first-child { color: var(--gray-600); }
+.review-row span:last-child { font-weight: 600; color: var(--gray-900); }
+
+/* ---- Success state ---- */
+.success-box { text-align: center; padding: 30px 0; }
+.success-box .icon-circle {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  background: #eafaf3;
+  color: var(--green);
+  font-size: 30px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.success-box h3 { font-size: 20px; margin-bottom: 8px; }
+.success-box p { color: var(--gray-600); font-size: 14px; margin-bottom: 24px; }
+
+/* ---- Book-ride page ---- */
+.book-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.book-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+}
+.vehicle-select-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+.vehicle-option {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+.vehicle-option .emoji { font-size: 26px; margin-bottom: 8px; }
+.vehicle-option h4 { font-size: 12.5px; margin-bottom: 3px; }
+.vehicle-option span { font-size: 11px; color: var(--gray-400); }
+.vehicle-option.selected { border-color: var(--blue-900); background: var(--blue-100); }
+.vehicle-option.selected h4 { color: var(--blue-900); }
+
+.fare-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+  position: sticky;
+  top: 90px;
+}
+.fare-card h3 { font-size: 16px; margin-bottom: 18px; }
+.fare-row { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--gray-600); padding: 8px 0; }
+.fare-row.total { border-top: 1.5px solid var(--border); margin-top: 8px; padding-top: 14px; font-weight: 700; color: var(--gray-900); font-size: 15px; }
+.fare-card .btn--submit { width: 100%; margin-top: 18px; padding: 13px; }
+.fare-empty { text-align: center; color: var(--gray-400); font-size: 13px; padding: 20px 0; }
+
+/* ---- Responsive ---- */
+@media (max-width: 860px) {
+  .auth-split { grid-template-columns: 1fr; }
+  .auth-visual { display: none; }
+  .form-row { grid-template-columns: 1fr; }
+  .book-layout { grid-template-columns: 1fr; }
+  .upload-grid { grid-template-columns: 1fr; }
+  .vehicle-select-grid { grid-template-columns: repeat(2, 1fr); }
+  .stepper .step-label { display: none; }
+}

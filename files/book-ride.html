@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Ride - Vazraa Industrial Solutions</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- ===== HEADER / NAVBAR ===== -->
+<div id="site-header"></div>
+
+<main class="page-wrap">
+  <div class="container">
+    <div class="page-header">
+      <h1>Book a Ride</h1>
+      <p>Choose your vehicle, enter your trip details, and see your fare instantly.</p>
+    </div>
+
+    <div class="book-layout">
+
+      <div class="book-card">
+        <h3 style="font-size:15px; margin-bottom:14px;">1. Choose Vehicle Type</h3>
+        <div class="vehicle-select-grid" id="vehicleSelectGrid">
+          <div class="vehicle-option" data-type="car" data-rate="8"><div class="emoji">🚗</div><h4>Car & Sedan</h4><span>₹8/km</span></div>
+          <div class="vehicle-option" data-type="bike" data-rate="2"><div class="emoji">🏍️</div><h4>Bike & Scooter</h4><span>₹2/km</span></div>
+          <div class="vehicle-option" data-type="bus" data-rate="25"><div class="emoji">🚌</div><h4>Bus</h4><span>₹25/km</span></div>
+          <div class="vehicle-option" data-type="commercial" data-rate="20"><div class="emoji">🚚</div><h4>Commercial</h4><span>₹20/km</span></div>
+          <div class="vehicle-option" data-type="van" data-rate="16"><div class="emoji">🚐</div><h4>Van / Minibus</h4><span>₹16/km</span></div>
+          <div class="vehicle-option" data-type="ev" data-rate="16"><div class="emoji">🔋</div><h4>EV Vehicle</h4><span>₹16/km</span></div>
+        </div>
+
+        <h3 style="font-size:15px; margin-bottom:14px;">2. Trip Details</h3>
+        <form class="form-grid" id="rideForm" novalidate>
+          <div class="form-row">
+            <div class="field">
+              <label for="rideFrom">Pickup Location</label>
+              <input type="text" id="rideFrom" placeholder="Enter pickup location" required>
+            </div>
+            <div class="field">
+              <label for="rideTo">Drop Location</label>
+              <input type="text" id="rideTo" placeholder="Enter drop location" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="rideDate">Date</label>
+              <input type="date" id="rideDate" required>
+            </div>
+            <div class="field">
+              <label for="rideTime">Time</label>
+              <input type="time" id="rideTime" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="ridePassengers">Passengers</label>
+            <select id="ridePassengers">
+              <option>1 Passenger</option>
+              <option>2 Passengers</option>
+              <option>3 Passengers</option>
+              <option>4+ Passengers</option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <div class="fare-card">
+        <h3>Fare Estimate</h3>
+        <div id="fareContent">
+          <div class="fare-empty">Select a vehicle type to see your fare estimate.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<div id="site-footer"></div>
+
+<script src="api.config.js"></script>
+<script src="script.js"></script>
+<script src="book-ride.js"></script>
+<script src="include.js"></script>
+</body>
+</html>

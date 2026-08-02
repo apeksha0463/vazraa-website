@@ -1,0 +1,11 @@
+# Ignore backend directory from frontend context
+backend/node_modules/
+backend/src/logs/
+backend/*.log
+.git
+.github
+.gitignore
+.env
+.env.production
+docker-compose.yml
+README.md

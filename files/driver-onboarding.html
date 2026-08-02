@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driver Onboarding - Vazraa Industrial Solutions</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- ===== HEADER / NAVBAR ===== -->
+<div id="site-header"></div>
+
+<main class="page-wrap">
+  <div class="container">
+    <div class="page-header">
+      <h1>Become a Vazraa Driver Partner</h1>
+      <p>Complete these steps to start accepting rides and earning.</p>
+    </div>
+
+    <div class="onboarding-card">
+
+      <div class="stepper" id="stepper">
+        <div class="step active" data-step="1">
+          <div class="step-circle">1</div>
+          <div class="step-label">Personal Details</div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-circle">2</div>
+          <div class="step-label">Vehicle Details</div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-circle">3</div>
+          <div class="step-label">Documents</div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-circle">4</div>
+          <div class="step-label">Review & Submit</div>
+        </div>
+      </div>
+
+      <form id="driverForm" novalidate>
+
+        <!-- Step 1: Personal Details -->
+        <div class="step-panel active" data-panel="1">
+          <h3>Personal Details</h3>
+          <p class="sub">Tell us a bit about yourself.</p>
+          <div class="form-grid">
+            <div class="form-row">
+              <div class="field">
+                <label for="drvName">Full Name</label>
+                <input type="text" id="drvName" required>
+              </div>
+              <div class="field">
+                <label for="drvPhone">Phone Number</label>
+                <input type="tel" id="drvPhone" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="drvEmail">Email Address</label>
+                <input type="email" id="drvEmail" required>
+              </div>
+              <div class="field">
+                <label for="drvCity">City</label>
+                <input type="text" id="drvCity" placeholder="e.g. Bokaro" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="drvAddress">Full Address</label>
+              <textarea id="drvAddress" required></textarea>
+            </div>
+          </div>
+          <div class="step-actions">
+            <span></span>
+            <button type="button" class="btn btn--primary next-step">Continue <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 2: Vehicle Details -->
+        <div class="step-panel" data-panel="2">
+          <h3>Vehicle Details</h3>
+          <p class="sub">Tell us about the vehicle you'll drive.</p>
+          <div class="form-grid">
+            <div class="form-row">
+              <div class="field">
+                <label for="vehType">Vehicle Type</label>
+                <select id="vehType" required>
+                  <option value="">Select vehicle type</option>
+                  <option>Car / Sedan</option>
+                  <option>Bike / Scooter</option>
+                  <option>Bus</option>
+                  <option>Commercial Vehicle</option>
+                  <option>Van / Minibus</option>
+                  <option>EV Vehicle</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="vehModel">Vehicle Model</label>
+                <input type="text" id="vehModel" placeholder="e.g. Maruti Swift Dzire" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="field">
+                <label for="vehReg">Registration Number</label>
+                <input type="text" id="vehReg" placeholder="e.g. JH10 AB 1234" required>
+              </div>
+              <div class="field">
+                <label for="vehYear">Year of Manufacture</label>
+                <input type="number" id="vehYear" min="1990" max="2026" placeholder="e.g. 2021" required>
+              </div>
+            </div>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn btn--outline prev-step">Back</button>
+            <button type="button" class="btn btn--primary next-step">Continue <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 3: Documents -->
+        <div class="step-panel" data-panel="3">
+          <h3>Upload Documents</h3>
+          <p class="sub">Clear photos or scans, please. All fields required.</p>
+          <div class="upload-grid">
+            <label class="upload-box" data-doc="license">
+              <i class="fas fa-id-card"></i>
+              <p>Driving License</p>
+              <span>PDF, JPG or PNG · Max 5MB</span>
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png">
+            </label>
+            <label class="upload-box" data-doc="rc">
+              <i class="fas fa-file-alt"></i>
+              <p>Vehicle RC</p>
+              <span>PDF, JPG or PNG · Max 5MB</span>
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png">
+            </label>
+            <label class="upload-box" data-doc="insurance">
+              <i class="fas fa-shield-alt"></i>
+              <p>Insurance Certificate</p>
+              <span>PDF, JPG or PNG · Max 5MB</span>
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png">
+            </label>
+            <label class="upload-box" data-doc="photo">
+              <i class="fas fa-user-circle"></i>
+              <p>Profile Photo</p>
+              <span>JPG or PNG · Max 5MB</span>
+              <input type="file" accept=".jpg,.jpeg,.png">
+            </label>
+          </div>
+          <div class="form-error show" id="docsError" style="margin-top:16px;">Please upload all 4 documents before continuing.</div>
+          <div class="step-actions">
+            <button type="button" class="btn btn--outline prev-step">Back</button>
+            <button type="button" class="btn btn--primary next-step">Continue <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 4: Review -->
+        <div class="step-panel" data-panel="4">
+          <h3>Review & Submit</h3>
+          <p class="sub">Please confirm your details before submitting.</p>
+          <div class="review-list" id="reviewList"></div>
+          <div class="checkbox-row" style="margin-top:20px;">
+            <input type="checkbox" id="drvTerms" required>
+            <label for="drvTerms">I confirm the above details are accurate and agree to the <a href="#">Driver Partner Terms</a>.</label>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn btn--outline prev-step">Back</button>
+            <button type="submit" class="btn btn--primary">Submit Application <i class="fas fa-check"></i></button>
+          </div>
+        </div>
+
+      </form>
+
+      <!-- Success -->
+      <div class="success-box" id="driverSuccess" style="display:none;">
+        <div class="icon-circle"><i class="fas fa-check"></i></div>
+        <h3>Application Submitted!</h3>
+        <p>We'll verify your documents and get back to you within 24-48 hours.</p>
+        <a href="index.html" class="btn btn--primary">Back to Home</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ===== FOOTER ===== -->
+<div id="site-footer"></div>
+
+<script src="api.config.js"></script>
+<script src="script.js"></script>
+<script src="include.js"></script>
+<script src="onboarding.js"></script>
+</body>
+</html>

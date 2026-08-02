@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vazraa industrial solutions</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- ===== HEADER / NAVBAR ===== -->
+<div id="site-header"></div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <h1>One Platform.<br>Every Ride. Every Need.</h1>
+      <p>Vazraa Mobility is your comprehensive transport booking ecosystem for every journey, every vehicle, every time.</p>
+
+      <ul class="hero__badges">
+        <li><i class="fas fa-car-side"></i> Wide Choice <span>1000+ Vehicles</span></li>
+        <li><i class="fas fa-shield-alt"></i> Trusted Partners <span>Verified & Safe</span></li>
+        <li><i class="fas fa-tags"></i> Best Prices <span>Transparent & Fair</span></li>
+      </ul>
+    </div>
+
+    <!-- Booking Widget -->
+    <div class="booking-card">
+      <div class="booking-tabs">
+        <button class="tab active" data-tab="oneway"><i class="fas fa-exchange-alt"></i> One Way / Round Trip</button>
+        <button class="tab" data-tab="hourly"><i class="fas fa-clock"></i> Hourly Rental</button>
+        <button class="tab" data-tab="outstation"><i class="fas fa-route"></i> Outstation</button>
+        <button class="tab" data-tab="monthly"><i class="fas fa-calendar-alt"></i> Monthly Rental</button>
+      </div>
+
+      <form class="booking-form" id="bookingForm">
+        <div class="field field--swap">
+          <label>From</label>
+          <input type="text" placeholder="Enter pickup location">
+          <button type="button" class="swap-btn" id="swapBtn" aria-label="Swap locations"><i class="fas fa-exchange-alt"></i></button>
+        </div>
+        <div class="field">
+          <label>To</label>
+          <input type="text" placeholder="Enter drop location">
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input type="text" placeholder="Select date" id="dateInput">
+          <i class="far fa-calendar field-icon"></i>
+        </div>
+        <div class="field">
+          <label>Vehicle Type</label>
+          <select>
+            <option>All Vehicles</option>
+            <option>Cars & Sedans</option>
+            <option>Bikes & Scooters</option>
+            <option>Buses</option>
+            <option>Commercial Vehicles</option>
+            <option>Vans & Minibuses</option>
+            <option>EV Vehicles</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn--primary btn--search"><i class="fas fa-search"></i> Search Vehicles</button>
+      </form>
+
+      <ul class="booking-perks">
+        <li><i class="fas fa-bolt"></i> Instant Booking</li>
+        <li><i class="fas fa-lock"></i> Secure Payments</li>
+        <li><i class="fas fa-headset"></i> 24x7 Support</li>
+        <li><i class="fas fa-ban"></i> Free Cancellation*</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VEHICLE CATEGORIES ===== -->
+<section class="section categories">
+  <div class="container">
+    <div class="section-head">
+      <h2>Explore Our Vehicle Categories</h2>
+      <a href="#" class="btn btn--outline btn--sm">View All Vehicles</a>
+    </div>
+
+    <div class="category-grid" id="categoryGrid">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===== WHY CHOOSE US ===== -->
+<section class="section why">
+  <div class="container">
+    <h2 class="center">Why Choose Vazraa Mobility?</h2>
+    <div class="why-grid" id="whyGrid">
+      <!-- injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS + TESTIMONIALS ===== -->
+<section class="section proof">
+  <div class="container proof__inner">
+    <div class="stats-card">
+      <h3>Trusted by Thousands</h3>
+      <div class="stats-grid" id="statsGrid"></div>
+    </div>
+
+    <div class="testimonials">
+      <h3>What Our Customers Say</h3>
+      <div class="testimonial-grid" id="testimonialGrid"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA BANNER ===== -->
+<section class="cta">
+  <div class="container cta__inner">
+    <div class="cta__phones" aria-hidden="true">
+      <div class="phone phone--back"></div>
+      <div class="phone phone--front"></div>
+    </div>
+    <div class="cta__text">
+      <h3>Your Journey Starts Here!</h3>
+      <p>Book your ride in just a few clicks and experience the best in mobility.</p>
+    </div>
+    <div class="cta__actions">
+      <a href="book-ride.html" class="btn btn--white">Book Now</a>
+      <a href="driver-onboarding.html" class="btn btn--outline-light">List Your Vehicle</a>
+      <div class="cta__call">
+        <i class="fas fa-phone-alt"></i>
+        <div>
+          <small>For Corporate & Bulk Bookings</small>
+          <strong>+91 9090 999 888</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div id="site-footer"></div>
+
+<script src="script.js"></script>
+<script src="include.js"></script>
+</body>
+</html>
