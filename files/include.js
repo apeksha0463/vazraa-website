@@ -51,6 +51,13 @@ function updateNavForAuth() {
     myRidesLink.style.display = "flex";
   }
 
+  // Show Admin Panel link only when role is admin
+  const role = localStorage.getItem("vazraa_role");
+  const adminNav = document.getElementById("adminNav");
+  if (adminNav && token && role === "admin") {
+    adminNav.style.display = "flex";
+  }
+
   // Swap Login/Signup buttons to Logout when logged in
   const navbarRight = document.querySelector(".navbar__right");
   if (navbarRight && token) {

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Vazraa Mobility</title>
+  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- Header placeholder -->
+  <div id="site-header"></div>
+
+  <main class="admin-layout" id="adminMain" style="display: none;">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar__nav">
+        <button id="nav-overview" class="active" onclick="switchTab('overview')">
+          <i class="fa fa-chart-pie"></i> Overview
+        </button>
+        <button id="nav-bookings" onclick="switchTab('bookings')">
+          <i class="fa fa-calendar-alt"></i> Bookings
+        </button>
+        <button id="nav-users" onclick="switchTab('users')">
+          <i class="fa fa-users"></i> Users & Drivers
+        </button>
+      </div>
+    </aside>
+
+    <!-- Content Area -->
+    <section class="admin-content">
+      
+      <!-- TAB: Overview -->
+      <div id="tab-overview" class="admin-tab">
+        <div class="admin-header">
+          <h1>Dashboard Overview</h1>
+          <p>Welcome back, Admin. Here's what's happening today.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa fa-car"></i></div>
+            <div class="stat-info">
+              <h3>Total Bookings</h3>
+              <div class="stat-val" id="stat-bookings">-</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fa fa-users"></i></div>
+            <div class="stat-info">
+              <h3>Active Users</h3>
+              <div class="stat-val" id="stat-users">-</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:#e8f5e9;color:#22c55e;"><i class="fa fa-rupee-sign"></i></div>
+            <div class="stat-info">
+              <h3>Total Revenue (Est.)</h3>
+              <div class="stat-val" id="stat-revenue">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Bookings -->
+      <div id="tab-bookings" class="admin-tab" style="display: none;">
+        <div class="admin-header">
+          <h1>Manage Bookings</h1>
+          <p>View and update the status of all rides.</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Recent Bookings</h3>
+            <button class="btn btn--primary btn--sm" onclick="loadBookings()"><i class="fa fa-sync-alt"></i> Refresh</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Customer</th>
+                  <th>Route</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="bookingsTableBody">
+                <tr><td colspan="6" style="text-align:center;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Users -->
+      <div id="tab-users" class="admin-tab" style="display: none;">
+        <div class="admin-header">
+          <h1>Manage Users</h1>
+          <p>View all registered customers and drivers.</p>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Customers</h3>
+            <button class="btn btn--primary btn--sm" onclick="loadUsers()"><i class="fa fa-sync-alt"></i> Refresh</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card__header">
+            <h3>Drivers</h3>
+            <button class="btn btn--primary btn--sm" onclick="loadDrivers()"><i class="fa fa-sync-alt"></i> Refresh</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="driversTableBody">
+                <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Global Toast -->
+  <div class="toast" id="toast" style="display:none; position:fixed; bottom:20px; right:20px; background:#1a1a2e; color:#fff; padding:12px 24px; border-radius:8px; z-index:1000;"></div>
+
+  <script src="api.config.js?v=6"></script>
+  <script src="include.js?v=6"></script>
+  <script src="admin.js?v=6"></script>
+</body>
+</html>
