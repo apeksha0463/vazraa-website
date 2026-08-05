@@ -868,3 +868,281 @@ h2.center { text-align: center; margin-bottom: 44px; }
   .admin-sidebar__nav button { white-space: nowrap; }
   .admin-content { padding: 20px; }
 }
+
+/* ================= BOOKING CONFIRMATION ================= */
+.confirm-section {
+  padding: 60px 20px 80px;
+  background: var(--bg-light);
+  min-height: calc(100vh - 300px); /* Account for header/footer */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.confirm-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  max-width: 540px;
+  width: 100%;
+  overflow: hidden;
+  animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Top success banner ── */
+.confirm-banner {
+  background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 100%);
+  color: #fff;
+  padding: 40px 32px 32px;
+  text-align: center;
+  position: relative;
+}
+.confirm-banner .checkmark-circle {
+  width: 72px;
+  height: 72px;
+  background: var(--yellow-500);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 32px;
+  box-shadow: 0 4px 20px rgba(245,166,35,0.4);
+  animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+.confirm-banner h1 { font-size: 24px; font-weight: 800; margin: 0 0 6px; }
+.confirm-banner p  { font-size: 14px; opacity: 0.85; margin: 0; }
+.booking-number {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 14px;
+  letter-spacing: 0.5px;
+}
+
+/* ── ETA pill ── */
+.eta-bar {
+  background: #fff9f0;
+  border-bottom: 1px solid #fde9bb;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+.eta-bar .eta-icon { font-size: 24px; }
+.eta-bar .eta-text { font-size: 14px; color: var(--gray-600); font-weight: 500;}
+.eta-bar .eta-time { font-size: 24px; font-weight: 800; color: var(--yellow-600); }
+.eta-bar .eta-unit { font-size: 13px; color: var(--gray-600); margin-left: 2px; }
+.eta-progress {
+  height: 4px;
+  background: #fde9bb;
+  position: relative;
+  overflow: hidden;
+}
+.eta-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--yellow-500), var(--yellow-600));
+  width: 30%;
+  border-radius: 2px;
+  animation: progressMove 3s ease-in-out infinite alternate;
+}
+@keyframes progressMove {
+  from { width: 20%; }
+  to   { width: 65%; }
+}
+
+/* ── Driver card ── */
+.driver-section {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+}
+.driver-section h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray-500);
+  margin: 0 0 16px;
+}
+.driver-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.driver-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--yellow-500);
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(245,166,35,0.25);
+}
+.driver-info { flex: 1; }
+.driver-info .driver-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0 0 4px;
+}
+.driver-info .driver-company {
+  font-size: 13px;
+  color: var(--yellow-600);
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+.driver-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--gray-600);
+}
+.driver-rating .stars { color: var(--yellow-500); font-size: 12px; }
+.driver-vehicle {
+  background: var(--gray-100);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.vehicle-icon { font-size: 28px; }
+.vehicle-details .v-model {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+}
+.vehicle-details .v-plate {
+  font-size: 13px;
+  color: var(--gray-600);
+  margin: 2px 0 0;
+}
+.made-in-india {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff3e0;
+  border: 1px solid #ffe0b2;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #e65100;
+  margin-top: 4px;
+}
+
+/* ── Trip summary ── */
+.trip-section {
+  padding: 24px 32px;
+  border-bottom: 1px solid var(--border);
+}
+.trip-section h3 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gray-500);
+  margin: 0 0 16px;
+}
+.trip-route {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.route-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.route-dot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20px;
+  flex-shrink: 0;
+  padding-top: 3px;
+}
+.route-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid;
+  flex-shrink: 0;
+}
+.route-dot.pickup { border-color: var(--yellow-500); background: #fff; }
+.route-dot.drop   { border-color: var(--blue-900); background: var(--blue-900); }
+.route-line {
+  width: 2px;
+  height: 28px;
+  background: var(--border);
+  margin: 4px 0;
+}
+.route-text .label { font-size: 11px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;}
+.route-text .value { font-size: 15px; font-weight: 600; color: var(--gray-900); margin: 0; }
+
+/* ── Fare + OTP ── */
+.bottom-section {
+  padding: 24px 32px 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.info-pill {
+  background: var(--gray-100);
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+}
+.info-pill .pill-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--gray-500);
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+.info-pill .pill-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--gray-900);
+  margin: 0;
+}
+.info-pill .pill-value.otp {
+  color: var(--yellow-600);
+  letter-spacing: 4px;
+}
+.info-pill .pill-sub {
+  font-size: 11px;
+  color: var(--gray-500);
+  margin: 4px 0 0;
+}
+
+/* ── CTA buttons ── */
+.confirm-actions {
+  padding: 0 32px 32px;
+  display: flex;
+  gap: 12px;
+}
+.confirm-actions button {
+  flex: 1;
+}
+
+@media (max-width: 480px) {
+  .confirm-section { padding: 30px 16px; }
+  .confirm-banner, .driver-section, .trip-section, .bottom-section, .confirm-actions { padding-left: 20px; padding-right: 20px; }
+  .eta-bar { padding: 14px 20px; }
+  .bottom-section { grid-template-columns: 1fr; }
+}
