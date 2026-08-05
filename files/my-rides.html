@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Rides - Vazraa Mobility</title>
+<link rel="stylesheet" href="style.css?v=3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  .rides-wrap { padding: 48px 0 80px; min-height: 80vh; }
+
+  /* ── Page header ── */
+  .rides-page-header { margin-bottom: 32px; }
+  .rides-page-header h1 { font-size: 28px; font-weight: 800; color: #1a1a2e; margin-bottom: 6px; }
+  .rides-page-header p  { font-size: 14px; color: #888; }
+
+  /* ── Section title ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #aaa;
+    margin: 0 0 14px;
+  }
+
+  /* ── Active booking banner ── */
+  .active-booking-section { margin-bottom: 40px; }
+  .active-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    border-radius: 20px;
+    padding: 28px 32px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .active-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: rgba(245,166,35,0.08);
+    border-radius: 50%;
+  }
+  .active-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .active-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(245,166,35,0.2);
+    border: 1px solid rgba(245,166,35,0.4);
+    color: #f5a623;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .active-label::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: #f5a623;
+    border-radius: 50%;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+  .active-booking-number { font-size: 13px; opacity: 0.6; }
+
+  .active-route {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .route-loc {
+    flex: 1;
+    min-width: 120px;
+  }
+  .route-loc .r-label { font-size: 10px; opacity: 0.55; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .route-loc .r-value { font-size: 15px; font-weight: 700; }
+  .route-arrow { color: #f5a623; font-size: 18px; flex-shrink: 0; }
+
+  .active-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .meta-item .m-label { font-size: 10px; opacity: 0.5; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  .meta-item .m-value { font-size: 14px; font-weight: 600; }
+  .meta-item .m-value.otp { color: #f5a623; letter-spacing: 3px; font-size: 18px; font-weight: 800; }
+  .meta-item .m-value.fare { color: #4ade80; }
+
+  .active-card-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-cancel-ride {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #f87171;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .btn-cancel-ride:hover { background: rgba(239,68,68,0.25); border-color: rgba(239,68,68,0.6); }
+  .btn-cancel-ride:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f8f9fc;
+    border-radius: 16px;
+    border: 1.5px dashed #e0e4ee;
+  }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-state h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+  .empty-state p  { font-size: 13px; color: #888; margin-bottom: 20px; }
+  .btn-book-now {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #1a1a2e;
+    color: #f5a623;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
+    text-decoration: none;
+  }
+  .btn-book-now:hover { background: #000; }
+
+  /* ── History table ── */
+  .history-section { margin-top: 40px; }
+  .history-grid { display: flex; flex-direction: column; gap: 12px; }
+  .history-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    transition: box-shadow 0.15s;
+  }
+  .history-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+  .history-left .h-route { font-size: 15px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+  .history-left .h-route span { color: #f5a623; margin: 0 6px; }
+  .history-left .h-meta { font-size: 12px; color: #888; display: flex; gap: 16px; flex-wrap: wrap; }
+  .history-left .h-meta i { margin-right: 4px; color: #bbb; }
+  .history-right { text-align: right; }
+  .history-right .h-fare { font-size: 18px; font-weight: 800; color: #1a1a2e; }
+  .h-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 4px;
+    text-transform: capitalize;
+  }
+  .h-status.pending    { background: #fff8e1; color: #f59e0b; }
+  .h-status.confirmed  { background: #e8f5e9; color: #22c55e; }
+  .h-status.in-progress{ background: #e3f2fd; color: #3b82f6; }
+  .h-status.completed  { background: #f0fdf4; color: #16a34a; }
+  .h-status.cancelled  { background: #fef2f2; color: #ef4444; }
+
+  /* ── Cancel modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  .modal-box h3 { font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+  .modal-box p  { font-size: 13px; color: #666; margin-bottom: 20px; }
+  .modal-box textarea {
+    width: 100%; padding: 12px; border: 1.5px solid #e0e0e0;
+    border-radius: 10px; font-family: 'Poppins', sans-serif;
+    font-size: 13px; resize: none; height: 80px;
+    margin-bottom: 16px; outline: none;
+    transition: border-color 0.15s;
+  }
+  .modal-box textarea:focus { border-color: #f5a623; }
+  .modal-actions { display: flex; gap: 10px; }
+  .btn-modal-cancel {
+    flex: 1; padding: 12px; border: 1.5px solid #e0e0e0;
+    border-radius: 10px; background: #fff; color: #555;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: 'Poppins', sans-serif; transition: background 0.15s;
+  }
+  .btn-modal-cancel:hover { background: #f5f5f5; }
+  .btn-modal-confirm {
+    flex: 1; padding: 12px; border: none;
+    border-radius: 10px; background: #ef4444; color: #fff;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    font-family: 'Poppins', sans-serif; transition: background 0.15s;
+  }
+  .btn-modal-confirm:hover { background: #dc2626; }
+  .btn-modal-confirm:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #1a1a2e; color: #fff; padding: 12px 24px;
+    border-radius: 30px; font-size: 13px; font-weight: 600;
+    z-index: 2000; opacity: 0; transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  /* ── Loading skeleton ── */
+  .skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 8px;
+  }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .skeleton-card { height: 80px; border-radius: 14px; margin-bottom: 12px; }
+
+  /* ── Login prompt ── */
+  .login-prompt { text-align: center; padding: 80px 20px; }
+  .login-prompt i { font-size: 48px; color: #ddd; margin-bottom: 16px; display: block; }
+  .login-prompt h3 { font-size: 20px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+  .login-prompt p  { font-size: 14px; color: #888; margin-bottom: 20px; }
+
+  @media (max-width: 600px) {
+    .active-card { padding: 20px; }
+    .history-card { grid-template-columns: 1fr; }
+    .history-right { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main class="rides-wrap">
+  <div class="container">
+    <div class="rides-page-header">
+      <h1>My Rides</h1>
+      <p>View your active booking and full ride history.</p>
+    </div>
+
+    <!-- ── Login prompt (shown if not logged in) ── -->
+    <div id="loginPrompt" class="login-prompt" style="display:none;">
+      <i class="fa fa-lock"></i>
+      <h3>Please log in to view your rides</h3>
+      <p>You need to be logged in to see your booking history.</p>
+      <a href="login.html" class="btn-book-now"><i class="fa fa-sign-in-alt"></i> Login</a>
+    </div>
+
+    <!-- ── Main content (shown when logged in) ── -->
+    <div id="ridesContent" style="display:none;">
+
+      <!-- Active booking -->
+      <div class="active-booking-section">
+        <p class="section-label">Active Booking</p>
+        <div id="activeBookingWrap">
+          <div class="skeleton skeleton-card"></div>
+        </div>
+      </div>
+
+      <!-- History -->
+      <div class="history-section">
+        <p class="section-label">Booking History</p>
+        <div id="historyWrap">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- ── Cancel Confirmation Modal ── -->
+<div class="modal-overlay" id="cancelModal">
+  <div class="modal-box">
+    <h3>Cancel this ride?</h3>
+    <p>Are you sure you want to cancel your booking? This action cannot be undone.</p>
+    <textarea id="cancelReason" placeholder="Reason for cancellation (optional)..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="modalClose">Keep Ride</button>
+      <button class="btn-modal-confirm" id="modalConfirm">
+        <i class="fa fa-times"></i> Yes, Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast notification ── -->
+<div class="toast" id="toast"></div>
+
+<div id="site-footer"></div>
+
+<script src="api.config.js?v=3"></script>
+<script src="script.js?v=3"></script>
+<script src="include.js?v=3"></script>
+<script>
+  const BASE = () => (window.API_CONFIG && window.API_CONFIG.BASE_URL) || 'http://localhost:5000';
+  const token = () => localStorage.getItem('vazraa_token') || '';
+
+  let bookingToCancel = null;
+
+  // ── Toast helper ──
+  function showToast(msg, duration = 3000) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration);
+  }
+
+  // ── Status badge ──
+  function statusBadge(status) {
+    const s = (status || 'pending').toLowerCase().replace(/\s+/g, '-');
+    return `<span class="h-status ${s}">${status}</span>`;
+  }
+
+  // ── Format date ──
+  function fmtDate(d) {
+    if (!d) return '—';
+    try { return new Date(d).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }); }
+    catch { return d; }
+  }
+
+  // ── Render active booking ──
+  function renderActive(booking) {
+    const wrap = document.getElementById('activeBookingWrap');
+    if (!booking) {
+      wrap.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">🚗</div>
+          <h3>No active booking</h3>
+          <p>You don't have any ongoing ride right now.</p>
+          <a href="book-ride.html" class="btn-book-now"><i class="fa fa-plus"></i> Book a Ride</a>
+        </div>`;
+      return;
+    }
+    const isCancellable = ['pending','confirmed'].includes((booking.bookingStatus||'').toLowerCase());
+    wrap.innerHTML = `
+      <div class="active-card">
+        <div class="active-card-header">
+          <span class="active-label">Active Ride</span>
+          <span class="active-booking-number">Booking # ${booking.bookingNumber || '—'}</span>
+        </div>
+        <div class="active-route">
+          <div class="route-loc">
+            <div class="r-label">Pickup</div>
+            <div class="r-value">${booking.pickup || '—'}</div>
+          </div>
+          <div class="route-arrow"><i class="fa fa-arrow-right"></i></div>
+          <div class="route-loc">
+            <div class="r-label">Drop</div>
+            <div class="r-value">${booking.drop || '—'}</div>
+          </div>
+        </div>
+        <div class="active-meta">
+          <div class="meta-item">
+            <div class="m-label">Vehicle</div>
+            <div class="m-value">${booking.vehicleType || '—'}</div>
+          </div>
+          <div class="meta-item">
+            <div class="m-label">Date</div>
+            <div class="m-value">${fmtDate(booking.scheduledDate)}</div>
+          </div>
+          <div class="meta-item">
+            <div class="m-label">Time</div>
+            <div class="m-value">${booking.scheduledTime || '—'}</div>
+          </div>
+          <div class="meta-item">
+            <div class="m-label">Fare</div>
+            <div class="m-value fare">₹${booking.estimatedFare || '—'}</div>
+          </div>
+          <div class="meta-item">
+            <div class="m-label">Ride OTP</div>
+            <div class="m-value otp">${booking.rideOtp || '—'}</div>
+          </div>
+        </div>
+        <div class="active-card-actions">
+          ${isCancellable ? `
+            <button class="btn-cancel-ride" id="cancelBtn" onclick="openCancelModal('${booking._id}')">
+              <i class="fa fa-times-circle"></i> Cancel Ride
+            </button>` : `<span style="color:rgba(255,255,255,0.5);font-size:13px;">Status: ${booking.bookingStatus}</span>`}
+        </div>
+      </div>`;
+  }
+
+  // ── Render history ──
+  function renderHistory(bookings) {
+    const wrap = document.getElementById('historyWrap');
+    const past = bookings.filter(b => !['pending','confirmed','in progress','in-progress'].includes((b.bookingStatus||'').toLowerCase()));
+    if (past.length === 0) {
+      wrap.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><h3>No past rides</h3><p>Your completed and cancelled rides will appear here.</p></div>`;
+      return;
+    }
+    wrap.innerHTML = `<div class="history-grid">${past.map(b => `
+      <div class="history-card">
+        <div class="history-left">
+          <div class="h-route">${b.pickup || '—'}<span>→</span>${b.drop || '—'}</div>
+          <div class="h-meta">
+            <span><i class="fa fa-car"></i>${b.vehicleType || '—'}</span>
+            <span><i class="fa fa-calendar"></i>${fmtDate(b.scheduledDate)}</span>
+            <span><i class="fa fa-hashtag"></i>${b.bookingNumber || '—'}</span>
+          </div>
+        </div>
+        <div class="history-right">
+          <div class="h-fare">₹${b.estimatedFare || '—'}</div>
+          ${statusBadge(b.bookingStatus)}
+        </div>
+      </div>`).join('')}</div>`;
+  }
+
+  // ── Cancel modal ──
+  function openCancelModal(bookingId) {
+    bookingToCancel = bookingId;
+    document.getElementById('cancelReason').value = '';
+    document.getElementById('cancelModal').classList.add('open');
+  }
+  document.getElementById('modalClose').onclick = () => {
+    document.getElementById('cancelModal').classList.remove('open');
+    bookingToCancel = null;
+  };
+  document.getElementById('modalConfirm').onclick = async () => {
+    if (!bookingToCancel) return;
+    const btn = document.getElementById('modalConfirm');
+    const reason = document.getElementById('cancelReason').value.trim();
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Cancelling…';
+    try {
+      const res = await fetch(`${BASE()}/api/bookings/cancel`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token()}` },
+        body: JSON.stringify({ bookingId: bookingToCancel, cancelReason: reason || 'Cancelled by customer' }),
+      });
+      const data = await res.json();
+      document.getElementById('cancelModal').classList.remove('open');
+      if (data.success) {
+        showToast('✅ Ride cancelled successfully');
+        setTimeout(() => loadRides(), 800);
+      } else {
+        showToast('❌ ' + (data.message || 'Could not cancel. Try again.'));
+      }
+    } catch {
+      showToast('❌ Could not reach server. Try again.');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa fa-times"></i> Yes, Cancel';
+      bookingToCancel = null;
+    }
+  };
+
+  // ── Load rides ──
+  async function loadRides() {
+    document.getElementById('activeBookingWrap').innerHTML = '<div class="skeleton skeleton-card"></div>';
+    document.getElementById('historyWrap').innerHTML = '<div class="skeleton skeleton-card"></div><div class="skeleton skeleton-card"></div>';
+    try {
+      const res  = await fetch(`${BASE()}/api/bookings/history`, {
+        headers: { 'Authorization': `Bearer ${token()}` }
+      });
+      const data = await res.json();
+      if (!data.success) { showToast('Failed to load rides.'); return; }
+      const bookings = data.data.bookings || [];
+      const active = bookings.find(b => ['pending','confirmed','in progress','in-progress'].includes((b.bookingStatus||'').toLowerCase()));
+      renderActive(active || null);
+      renderHistory(bookings);
+    } catch {
+      document.getElementById('activeBookingWrap').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><h3>Could not load rides</h3><p>Please check your connection.</p></div>';
+      document.getElementById('historyWrap').innerHTML = '';
+    }
+  }
+
+  // ── Init ──
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!token()) {
+      document.getElementById('loginPrompt').style.display = 'block';
+    } else {
+      document.getElementById('ridesContent').style.display = 'block';
+      loadRides();
+    }
+  });
+</script>
+</body>
+</html>

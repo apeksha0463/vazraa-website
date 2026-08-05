@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   setActiveNavLink();
   setupMobileMenu();
+  updateNavForAuth();
 
   // script.js already ran setupNavDropdowns() before the header existed,
   // so we call it again now that the real nav is in the DOM.
@@ -40,6 +41,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupNavDropdowns();
   }
 });
+
+function updateNavForAuth() {
+  const token = localStorage.getItem("vazraa_token");
+
+  // Show My Rides link only when logged in
+  const myRidesLink = document.getElementById("myRidesNav");
+  if (myRidesLink && token) {
+    myRidesLink.style.display = "flex";
+  }
+
+  // Swap Login/Signup buttons to Logout when logged in
+  const navbarRight = document.querySelector(".navbar__right");
+  if (navbarRight && token) {
+    navbarRight.innerHTML = `
+      <a href="my-rides.html" class="btn btn--outline icon-btn" aria-label="My Rides">
+        <i class="fas fa-route"></i><span>My Rides</span>
+      </a>
+      <button class="btn btn--primary icon-btn" aria-label="Logout" onclick="handleLogout()">
+        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+      </button>`;
+  }
+}
+
+function handleLogout() {
+  localStorage.removeItem("vazraa_token");
+  localStorage.removeItem("vazraa_user");
+  localStorage.removeItem("vazraa_last_booking");
+  window.location.href = "index.html";
+}
+
 
 function setupMobileMenu() {
   const navToggle = document.querySelector(".nav-toggle");
