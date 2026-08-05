@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://mongodb:27017/vazraa-mobility';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://mongo:27017/vazraa';
 
 async function seedDummyData() {
   try {
-    console.log(`Connecting to ${MONGODB_URI}...`);
+    console.log(`Connecting to MongoDB...`);
     await mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log('Connected!');
     
@@ -14,7 +14,15 @@ async function seedDummyData() {
 
     const passwordHash = await bcrypt.hash('Password123', 10);
     
-    // 1. Seed Dummy Users (Customers)
+    // 1. Delete existing dummy data to avoid duplicate key errors
+    console.log('Clearing old dummy data...');
+    await db.collection('users').deleteMany({ email: { $in: [
+      'rahul.s@example.com', 'priya.p@example.com', 'amit.k@example.com', 'sneha.g@example.com',
+      'ramesh.yot@example.com', 'suresh.s@example.com', 'kiran.r@example.com'
+    ]}});
+    await db.collection('bookings').deleteMany({ bookingNumber: { $regex: /^VZ-1004/ } });
+
+    // 2. Seed Dummy Users (Customers)
     const users = [
       { name: 'Rahul Sharma', email: 'rahul.s@example.com', phone: '9876543210', role: 'customer', passwordHash, isActive: true, createdAt: new Date(Date.now() - 86400000 * 5) },
       { name: 'Priya Patel', email: 'priya.p@example.com', phone: '9876543211', role: 'customer', passwordHash, isActive: true, createdAt: new Date(Date.now() - 86400000 * 12) },
@@ -22,7 +30,7 @@ async function seedDummyData() {
       { name: 'Sneha Gupta', email: 'sneha.g@example.com', phone: '9876543213', role: 'customer', passwordHash, isActive: true, createdAt: new Date(Date.now() - 86400000 * 2) }
     ];
     
-    // 2. Seed Dummy Drivers
+    // 3. Seed Dummy Drivers
     const drivers = [
       { name: 'Ramesh (YOT India)', email: 'ramesh.yot@example.com', phone: '9988776655', role: 'driver', passwordHash, isActive: true, createdAt: new Date(Date.now() - 86400000 * 30) },
       { name: 'Suresh Singh', email: 'suresh.s@example.com', phone: '9988776656', role: 'driver', passwordHash, isActive: true, createdAt: new Date(Date.now() - 86400000 * 15) },
@@ -37,7 +45,7 @@ async function seedDummyData() {
     const customerId1 = insertedDocs[0];
     const customerId2 = insertedDocs[1];
 
-    // 3. Seed Dummy Bookings
+    // 4. Seed Dummy Bookings
     const bookings = [
       {
         bookingNumber: 'VZ-10045',
