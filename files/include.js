@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadPartial("footer.html", "site-footer");
 
   setActiveNavLink();
+  setupMobileMenu();
 
   // script.js already ran setupNavDropdowns() before the header existed,
   // so we call it again now that the real nav is in the DOM.
@@ -39,3 +40,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     setupNavDropdowns();
   }
 });
+
+function setupMobileMenu() {
+  const navToggle = document.querySelector(".nav-toggle");
+  const navbar = document.querySelector(".navbar");
+  if (!navToggle || !navbar) return;
+
+  const navIcon = navToggle.querySelector("i");
+  navToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const open = navbar.classList.toggle("nav-open");
+    navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    if (navIcon) {
+      navIcon.classList.toggle("fa-bars", !open);
+      navIcon.classList.toggle("fa-xmark", open);
+      navToggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!navbar.contains(event.target) && navbar.classList.contains("nav-open")) {
+      navbar.classList.remove("nav-open");
+      navToggle.setAttribute("aria-expanded", "false");
+    }
+  });
+}
