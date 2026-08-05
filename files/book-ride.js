@@ -118,18 +118,15 @@ function setupBookRidePage() {
         const data = await response.json();
 
         if (data.success) {
-          // Save booking reference for convenience
+          // Save booking reference so the confirm page can read it
           localStorage.setItem("vazraa_last_booking", JSON.stringify(data.data));
 
-          successBox.innerHTML = `
-            ✅ Booking Confirmed!<br>
-            <strong>Booking #:</strong> ${data.data.bookingNumber}<br>
-            <strong>Fare:</strong> ₹${data.data.estimatedFare}<br>
-            <strong>Status:</strong> ${data.data.status}<br>
-            <strong>OTP:</strong> ${data.data.rideOtp} (show to driver)
-          `;
-          successBox.style.display = "block";
-          btn.textContent  = "Booked!";
+          btn.textContent = "Booked! Redirecting…";
+
+          // Redirect to the confirmation page
+          setTimeout(() => {
+            window.location.href = "booking-confirm.html";
+          }, 800);
         } else {
           errorBox.textContent = data.message || "Booking failed. Please try again.";
           errorBox.classList.add("show");

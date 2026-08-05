@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Booking Confirmed - Vazraa Mobility</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  body { background: #f4f6fb; font-family: 'Poppins', sans-serif; }
+
+  .confirm-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+  }
+
+  .confirm-card {
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.10);
+    max-width: 520px;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* ── Top success banner ── */
+  .confirm-banner {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    color: #fff;
+    padding: 36px 32px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .confirm-banner .checkmark-circle {
+    width: 72px;
+    height: 72px;
+    background: #f5a623;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 32px;
+    box-shadow: 0 4px 20px rgba(245,166,35,0.4);
+    animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .confirm-banner h1 { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+  .confirm-banner p  { font-size: 13px; opacity: 0.75; margin: 0; }
+  .booking-number {
+    display: inline-block;
+    background: rgba(245,166,35,0.18);
+    border: 1px solid rgba(245,166,35,0.5);
+    color: #f5a623;
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── ETA pill ── */
+  .eta-bar {
+    background: #fff8ec;
+    border-bottom: 1px solid #fde9bb;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+  .eta-bar .eta-icon { font-size: 22px; }
+  .eta-bar .eta-text { font-size: 14px; color: #555; }
+  .eta-bar .eta-time { font-size: 22px; font-weight: 800; color: #e07b00; }
+  .eta-bar .eta-unit { font-size: 12px; color: #888; margin-left: 2px; }
+  .eta-progress {
+    height: 4px;
+    background: #fde9bb;
+    position: relative;
+    overflow: hidden;
+  }
+  .eta-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f5a623, #e07b00);
+    width: 30%;
+    border-radius: 2px;
+    animation: progressMove 3s ease-in-out infinite alternate;
+  }
+  @keyframes progressMove {
+    from { width: 20%; }
+    to   { width: 65%; }
+  }
+
+  /* ── Driver card ── */
+  .driver-section {
+    padding: 24px 32px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .driver-section h3 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    margin: 0 0 16px;
+  }
+  .driver-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .driver-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f5a623;
+    flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(245,166,35,0.25);
+  }
+  .driver-info { flex: 1; }
+  .driver-info .driver-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 3px;
+  }
+  .driver-info .driver-company {
+    font-size: 12px;
+    color: #f5a623;
+    font-weight: 600;
+    margin: 0 0 6px;
+  }
+  .driver-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #555;
+  }
+  .driver-rating .stars { color: #f5a623; font-size: 12px; }
+  .driver-vehicle {
+    background: #f8f9fc;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .vehicle-icon { font-size: 28px; }
+  .vehicle-details .v-model {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+  }
+  .vehicle-details .v-plate {
+    font-size: 12px;
+    color: #777;
+    margin: 2px 0 0;
+  }
+  .made-in-india {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff3e0;
+    border: 1px solid #ffe0b2;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #e65100;
+    margin-top: 4px;
+  }
+
+  /* ── Trip summary ── */
+  .trip-section {
+    padding: 20px 32px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .trip-section h3 {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #999;
+    margin: 0 0 14px;
+  }
+  .trip-route {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .route-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .route-dot-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 18px;
+    flex-shrink: 0;
+    padding-top: 3px;
+  }
+  .route-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid;
+    flex-shrink: 0;
+  }
+  .route-dot.pickup { border-color: #f5a623; background: #fff; }
+  .route-dot.drop   { border-color: #1a1a2e; background: #1a1a2e; }
+  .route-line {
+    width: 2px;
+    height: 24px;
+    background: #e0e0e0;
+    margin: 3px 0;
+  }
+  .route-text .label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
+  .route-text .value { font-size: 14px; font-weight: 600; color: #1a1a2e; margin: 0; }
+
+  /* ── Fare + OTP ── */
+  .bottom-section {
+    padding: 20px 32px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .info-pill {
+    background: #f8f9fc;
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+  .info-pill .pill-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #aaa;
+    margin: 0 0 4px;
+  }
+  .info-pill .pill-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin: 0;
+  }
+  .info-pill .pill-value.otp {
+    color: #f5a623;
+    letter-spacing: 4px;
+  }
+  .info-pill .pill-sub {
+    font-size: 10px;
+    color: #bbb;
+    margin: 2px 0 0;
+  }
+
+  /* ── CTA buttons ── */
+  .confirm-actions {
+    padding: 0 32px 28px;
+    display: flex;
+    gap: 10px;
+  }
+  .btn-track {
+    flex: 1;
+    background: linear-gradient(135deg, #f5a623, #e07b00);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-track:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(245,166,35,0.4); }
+  .btn-home {
+    flex: 1;
+    background: #f4f6fb;
+    color: #1a1a2e;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    transition: background 0.15s;
+  }
+  .btn-home:hover { background: #e8ecf5; }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .confirm-banner, .driver-section, .trip-section, .bottom-section, .confirm-actions { padding-left: 20px; padding-right: 20px; }
+    .eta-bar { padding: 14px 20px; }
+    .bottom-section { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="confirm-wrap">
+  <div class="confirm-card">
+
+    <!-- ── Banner ── -->
+    <div class="confirm-banner">
+      <div class="checkmark-circle">✓</div>
+      <h1>Booking Confirmed!</h1>
+      <p>Your ride has been successfully booked.</p>
+      <div class="booking-number" id="bookingNumberDisplay">Loading...</div>
+    </div>
+
+    <!-- ── ETA bar ── -->
+    <div class="eta-bar">
+      <span class="eta-icon">🚗</span>
+      <span class="eta-text">Driver arriving in</span>
+      <span class="eta-time" id="etaMinutes">8</span>
+      <span class="eta-unit">mins</span>
+    </div>
+    <div class="eta-progress"><div class="eta-progress-fill"></div></div>
+
+    <!-- ── Driver ── -->
+    <div class="driver-section">
+      <h3>Your Driver</h3>
+      <div class="driver-card">
+        <img src="images/driver-yot.jpg" alt="Driver Rajan Kumar" class="driver-photo">
+        <div class="driver-info">
+          <p class="driver-name">Rajan Kumar</p>
+          <p class="driver-company">YOT India Fleet</p>
+          <div class="driver-rating">
+            <span class="stars">★★★★★</span>
+            <span>4.9 (312 rides)</span>
+          </div>
+        </div>
+      </div>
+      <div class="driver-vehicle">
+        <span class="vehicle-icon">🚗</span>
+        <div class="vehicle-details">
+          <p class="v-model">Tata Nexon EV</p>
+          <p class="v-plate">KA 05 MZ 4821</p>
+          <span class="made-in-india">🇮🇳 Made in India</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Trip route ── -->
+    <div class="trip-section">
+      <h3>Trip Details</h3>
+      <div class="trip-route">
+        <div class="route-point">
+          <div class="route-dot-wrap">
+            <div class="route-dot pickup"></div>
+            <div class="route-line"></div>
+          </div>
+          <div class="route-text">
+            <div class="label">Pickup</div>
+            <div class="value" id="tripFrom">—</div>
+          </div>
+        </div>
+        <div class="route-point">
+          <div class="route-dot-wrap">
+            <div class="route-dot drop"></div>
+          </div>
+          <div class="route-text">
+            <div class="label">Drop</div>
+            <div class="value" id="tripTo">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Fare + OTP ── -->
+    <div class="bottom-section">
+      <div class="info-pill">
+        <div class="pill-label">Estimated Fare</div>
+        <div class="pill-value" id="tripFare">—</div>
+        <div class="pill-sub">inclusive of all fees</div>
+      </div>
+      <div class="info-pill">
+        <div class="pill-label">Ride OTP</div>
+        <div class="pill-value otp" id="tripOtp">—</div>
+        <div class="pill-sub">show to driver</div>
+      </div>
+    </div>
+
+    <!-- ── Actions ── -->
+    <div class="confirm-actions">
+      <button class="btn-track" onclick="window.location.href='index.html'">
+        <i class="fa fa-home"></i> Go Home
+      </button>
+      <button class="btn-home" onclick="window.location.href='book-ride.html'">
+        Book Another
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script src="api.config.js"></script>
+<script>
+  // Read booking data saved by book-ride.js
+  const booking = JSON.parse(localStorage.getItem('vazraa_last_booking') || '{}');
+
+  // Booking number
+  document.getElementById('bookingNumberDisplay').textContent =
+    booking.bookingNumber ? `Booking # ${booking.bookingNumber}` : 'Booking Confirmed';
+
+  // Trip details
+  if (booking.pickup) document.getElementById('tripFrom').textContent = booking.pickup;
+  if (booking.drop)   document.getElementById('tripTo').textContent   = booking.drop;
+
+  // Fare
+  if (booking.estimatedFare != null) {
+    document.getElementById('tripFare').textContent = `₹${booking.estimatedFare}`;
+  }
+
+  // OTP
+  if (booking.rideOtp) {
+    document.getElementById('tripOtp').textContent = booking.rideOtp;
+  }
+
+  // Random ETA between 5 and 14 minutes for realism
+  const eta = Math.floor(Math.random() * 10) + 5;
+  document.getElementById('etaMinutes').textContent = eta;
+
+  // Live countdown
+  let minutes = eta;
+  let seconds = 0;
+  setInterval(() => {
+    if (seconds === 0) {
+      if (minutes > 0) { minutes--; seconds = 59; }
+    } else { seconds--; }
+    document.getElementById('etaMinutes').textContent =
+      minutes > 0 ? minutes : `< 1`;
+  }, 1000);
+</script>
+</body>
+</html>
