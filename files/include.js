@@ -55,9 +55,6 @@ function updateNavForAuth() {
   const navbarRight = document.querySelector(".navbar__right");
   if (navbarRight && token) {
     navbarRight.innerHTML = `
-      <a href="my-rides.html" class="btn btn--outline icon-btn" aria-label="My Rides">
-        <i class="fas fa-route"></i><span>My Rides</span>
-      </a>
       <button class="btn btn--primary icon-btn" aria-label="Logout" onclick="handleLogout()">
         <i class="fas fa-sign-out-alt"></i><span>Logout</span>
       </button>`;
