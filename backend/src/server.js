@@ -105,8 +105,8 @@ async function seedAdmin() {
     const adminName     = process.env.ADMIN_NAME     || 'Vazraa Admin';
 
     const existing = await User.findOne({ email: adminEmail });
+    const passwordHash = await bcrypt.hash(adminPassword, 12);
     if (!existing) {
-      const passwordHash = await bcrypt.hash(adminPassword, 12);
       await User.create({
         name:         adminName,
         email:        adminEmail,
@@ -115,6 +115,11 @@ async function seedAdmin() {
         role:         ROLES.ADMIN,
       });
       console.log(`✅  Admin seeded: ${adminEmail} / ${adminPassword}`);
+    } else {
+      await User.updateOne({ email: adminEmail }, {
+        $set: { passwordHash, role: ROLES.ADMIN, isActive: true }
+      });
+      console.log(`✅  Admin reset: ${adminEmail} / ${adminPassword}`);
     }
   } catch (err) {
     logger.warn('Admin seed skipped', { error: err.message });
