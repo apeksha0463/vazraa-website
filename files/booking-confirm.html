@@ -85,12 +85,17 @@
         </div>
       </div>
   
-      <!-- ── Fare + OTP ── -->
+      <!-- ── Fare + OTP + Payment ── -->
       <div class="bottom-section">
         <div class="info-pill">
           <div class="pill-label">Estimated Fare</div>
           <div class="pill-value" id="tripFare">—</div>
           <div class="pill-sub">inclusive of all fees</div>
+        </div>
+        <div class="info-pill">
+          <div class="pill-label">Payment Status</div>
+          <div class="pill-value" id="tripPaymentStatus" style="color:var(--green); font-size:15px; font-weight:700;">Paid</div>
+          <div class="pill-sub">Cashfree Gateway</div>
         </div>
         <div class="info-pill">
           <div class="pill-label">Ride OTP</div>
@@ -116,34 +121,70 @@
   <div id="site-footer"></div>
 
   <!-- Scripts -->
-  <script src="api.config.js?v=7"></script>
-  <script src="include.js?v=7"></script>
+  <script src="api.config.js?v=8"></script>
+  <script src="include.js?v=8"></script>
   <script>
-    // Read booking data saved by book-ride.js
-    const booking = JSON.parse(localStorage.getItem('vazraa_last_booking') || '{}');
-  
-    // Booking number
-    document.getElementById('bookingNumberDisplay').textContent =
-      booking.bookingNumber ? `Booking # ${booking.bookingNumber}` : 'Booking Confirmed';
-  
-    // Trip details
-    if (booking.pickup) document.getElementById('tripFrom').textContent = booking.pickup;
-    if (booking.drop)   document.getElementById('tripTo').textContent   = booking.drop;
-  
-    // Fare
-    if (booking.estimatedFare != null) {
-      document.getElementById('tripFare').textContent = `₹${booking.estimatedFare}`;
+    function getBaseUrl() {
+      return (window.API_CONFIG && window.API_CONFIG.BASE_URL) || 'http://localhost:5000';
     }
-  
-    // OTP
-    if (booking.rideOtp) {
-      document.getElementById('tripOtp').textContent = booking.rideOtp;
+    function getToken() {
+      return localStorage.getItem('vazraa_token') || '';
     }
-  
+
+    // Read booking data saved by book-ride.js / payment-result.js
+    let booking = JSON.parse(localStorage.getItem('vazraa_last_booking') || '{}');
+
+    // Read query params if present (?bookingId=...)
+    const params = new URLSearchParams(window.location.search);
+    const urlBookingId = params.get('bookingId');
+    const targetBookingId = urlBookingId || booking.bookingId || booking._id;
+
+    function renderBookingUI(b) {
+      if (!b) return;
+      if (b.bookingNumber) {
+        document.getElementById('bookingNumberDisplay').textContent = `Booking # ${b.bookingNumber}`;
+      }
+      if (b.pickup) document.getElementById('tripFrom').textContent = b.pickup;
+      if (b.drop)   document.getElementById('tripTo').textContent   = b.drop;
+
+      const fare = b.estimatedFare ?? b.amount;
+      if (fare != null) {
+        document.getElementById('tripFare').textContent = `₹${fare}`;
+      }
+      if (b.rideOtp) {
+        document.getElementById('tripOtp').textContent = b.rideOtp;
+      }
+      const ps = b.paymentStatus || 'Paid';
+      const psEl = document.getElementById('tripPaymentStatus');
+      if (psEl) {
+        psEl.textContent = ps;
+        psEl.style.color = (ps.toLowerCase() === 'paid') ? '#1fa971' : '#d98f12';
+      }
+    }
+
+    // Initial render from local storage
+    renderBookingUI(booking);
+
+    // Fetch fresh details if targetBookingId is available
+    if (targetBookingId && getToken()) {
+      fetch(`${getBaseUrl()}/api/bookings/${targetBookingId}`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.data.booking) {
+          const fresh = data.data.booking;
+          localStorage.setItem('vazraa_last_booking', JSON.stringify(fresh));
+          renderBookingUI(fresh);
+        }
+      })
+      .catch(err => console.log('Could not fetch fresh booking details:', err));
+    }
+
     // Random ETA between 5 and 14 minutes for realism
     const eta = Math.floor(Math.random() * 10) + 5;
     document.getElementById('etaMinutes').textContent = eta;
-  
+
     // Live countdown
     let minutes = eta;
     let seconds = 0;

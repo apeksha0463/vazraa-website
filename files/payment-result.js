@@ -39,26 +39,20 @@
   }
 
   function showSuccess(data) {
-    document.getElementById('stateChecking').style.display = 'none';
-    document.getElementById('stateFailure').style.display  = 'none';
-    document.getElementById('stateSuccess').style.display  = '';
+    let existing = {};
+    try { existing = JSON.parse(localStorage.getItem('vazraa_last_booking') || '{}'); } catch {}
 
-    // Populate success details
-    const set = (id, val) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = val || '—';
+    const updatedBooking = {
+      ...existing,
+      ...data,
+      bookingId: data.bookingId || existing.bookingId || existing._id,
+      paymentStatus: 'Paid',
     };
+    localStorage.setItem('vazraa_last_booking', JSON.stringify(updatedBooking));
 
-    set('successBookingNumber', data.bookingNumber);
-    set('successPickup',  data.pickup);
-    set('successDrop',    data.drop);
-    set('successVehicle', data.vehicleType);
-
-    const amountEl = document.getElementById('successAmount');
-    if (amountEl) amountEl.textContent = data.amount != null ? `₹${data.amount}` : '₹—';
-
-    // Clear localStorage booking so next booking starts fresh
-    localStorage.removeItem('vazraa_last_booking');
+    const bookingId = updatedBooking.bookingId || data.bookingId || '';
+    const redirectUrl = `booking-confirm.html${bookingId ? '?bookingId=' + bookingId : ''}`;
+    window.location.href = redirectUrl;
   }
 
   function showFailure(data, status) {
