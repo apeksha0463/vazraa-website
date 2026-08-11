@@ -30,9 +30,11 @@ class PaymentController {
         return errorResponse(res, 'Booking not found', ERROR_CODES.BOOKING_NOT_FOUND, 404);
       }
 
-      // 2. Ensure booking belongs to the logged-in customer
-      const bookingCustomerId = booking.customerId?._id?.toString() || booking.customerId?.toString();
-      if (bookingCustomerId !== req.user.id) {
+      // 2. Ensure booking belongs to the logged-in customer (or admin)
+      const bookingCustomerId = (booking.customerId?._id || booking.customerId)?.toString();
+      const isOwner = bookingCustomerId === req.user.id.toString();
+      const isAdmin = req.user.role === 'admin';
+      if (!isOwner && !isAdmin) {
         return errorResponse(res, 'Access denied. This booking does not belong to you.', ERROR_CODES.FORBIDDEN, 403);
       }
 
@@ -114,9 +116,11 @@ class PaymentController {
         return errorResponse(res, 'Booking not found', ERROR_CODES.BOOKING_NOT_FOUND, 404);
       }
 
-      // 2. Ensure booking belongs to the logged-in customer
-      const bookingCustomerId = booking.customerId?._id?.toString() || booking.customerId?.toString();
-      if (bookingCustomerId !== req.user.id) {
+      // 2. Ensure booking belongs to the logged-in customer (or admin)
+      const bookingCustomerId = (booking.customerId?._id || booking.customerId)?.toString();
+      const isOwner = bookingCustomerId === req.user.id.toString();
+      const isAdmin = req.user.role === 'admin';
+      if (!isOwner && !isAdmin) {
         return errorResponse(res, 'Access denied. This booking does not belong to you.', ERROR_CODES.FORBIDDEN, 403);
       }
 
