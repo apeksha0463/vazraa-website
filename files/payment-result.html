@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Result - Vazraa Mobility</title>
+<meta name="description" content="Your Vazraa payment result and booking confirmation.">
+<link rel="icon" href="images/vazraa-logo.jpeg">
+<link rel="stylesheet" href="style.css?v=9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  /* ── Payment Result Page Styles ──────────────────────────────────────────── */
+  .result-section {
+    min-height: calc(100vh - 140px);
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+  }
+
+  .result-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+    width: 100%;
+    max-width: 520px;
+    overflow: hidden;
+    animation: slideUp 0.4s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Checking State ── */
+  .state-checking {
+    padding: 60px 32px;
+    text-align: center;
+  }
+  .state-checking .spinner-wrap {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+  }
+  .state-checking .spinner-ring {
+    width: 72px;
+    height: 72px;
+    border: 4px solid #e8ecf5;
+    border-top-color: #f5a623;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .state-checking h2 { color: #1b2434; font-size: 20px; margin-bottom: 8px; }
+  .state-checking p  { color: #8993a4; font-size: 14px; }
+
+  /* ── Success State ── */
+  .state-success .result-banner {
+    background: linear-gradient(135deg, #0d6e45, #1fa971);
+    padding: 32px;
+    text-align: center;
+  }
+  .checkmark-circle {
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 16px;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .state-success .result-banner h1 { color: #fff; font-size: 22px; margin-bottom: 4px; }
+  .state-success .result-banner p  { color: rgba(255,255,255,0.75); font-size: 14px; }
+
+  /* ── Failure State ── */
+  .state-failure .result-banner {
+    background: linear-gradient(135deg, #8b1a1a, #c0392b);
+    padding: 32px;
+    text-align: center;
+  }
+  .failure-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 16px;
+  }
+  .state-failure .result-banner h1 { color: #fff; font-size: 22px; margin-bottom: 4px; }
+  .state-failure .result-banner p  { color: rgba(255,255,255,0.75); font-size: 14px; }
+
+  /* ── Result Body ── */
+  .result-body {
+    padding: 28px 32px;
+  }
+
+  .result-amount-box {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border-radius: 12px;
+    padding: 18px 22px;
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .result-amount-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; margin-bottom: 4px; }
+  .result-amount-value { font-size: 32px; font-weight: 800; color: #f5a623; }
+
+  .result-details { margin-bottom: 24px; }
+  .result-details h3 { font-size: 12px; color: #8993a4; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f2f8;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-row-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: #f0f2f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .result-row-label { font-size: 11px; color: #8993a4; font-weight: 500; }
+  .result-row-value { font-size: 14px; color: #1b2434; font-weight: 600; margin-top: 1px; }
+
+  /* ── Status Pill ── */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .status-pill.paid    { background: #e6f9f0; color: #1fa971; }
+  .status-pill.pending { background: #fff4e0; color: #d98f12; }
+  .status-pill.failed  { background: #fff0f0; color: #c0392b; }
+
+  /* ── Action Buttons ── */
+  .result-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .result-actions .btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+
+  /* ── Retry button specific ── */
+  .retry-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #f5a623, #d98f12);
+    color: #1a1a1a;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 15px rgba(245,166,35,0.3);
+  }
+  .retry-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,166,35,0.4); }
+  .retry-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+  @media (max-width: 540px) {
+    .result-body { padding: 20px; }
+    .result-actions { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section class="result-section">
+  <div class="result-card" id="resultCard">
+
+    <!-- ── CHECKING STATE (initial) ── -->
+    <div class="state-checking" id="stateChecking">
+      <div class="spinner-wrap">
+        <div class="spinner-ring"></div>
+      </div>
+      <h2>Verifying Payment</h2>
+      <p>Please wait while we confirm your payment status…</p>
+    </div>
+
+    <!-- ── SUCCESS STATE ── -->
+    <div class="state-success" id="stateSuccess" style="display:none;">
+      <div class="result-banner">
+        <div class="checkmark-circle">✓</div>
+        <h1>Payment Successful!</h1>
+        <p>Your ride is confirmed and ready.</p>
+      </div>
+      <div class="result-body">
+        <div style="margin-bottom:16px;">
+          <span class="status-pill paid"><i class="fa fa-check-circle"></i> Payment: Paid</span>
+        </div>
+        <div class="result-amount-box">
+          <div class="result-amount-label">Amount Paid</div>
+          <div class="result-amount-value" id="successAmount">₹—</div>
+        </div>
+        <div class="result-details">
+          <h3>Booking Details</h3>
+          <div class="result-row">
+            <div class="result-row-icon">#</div>
+            <div>
+              <div class="result-row-label">Booking Number</div>
+              <div class="result-row-value" id="successBookingNumber">—</div>
+            </div>
+          </div>
+          <div class="result-row">
+            <div class="result-row-icon">📍</div>
+            <div>
+              <div class="result-row-label">Pickup</div>
+              <div class="result-row-value" id="successPickup">—</div>
+            </div>
+          </div>
+          <div class="result-row">
+            <div class="result-row-icon">🏁</div>
+            <div>
+              <div class="result-row-label">Drop</div>
+              <div class="result-row-value" id="successDrop">—</div>
+            </div>
+          </div>
+          <div class="result-row">
+            <div class="result-row-icon">🚗</div>
+            <div>
+              <div class="result-row-label">Vehicle</div>
+              <div class="result-row-value" id="successVehicle">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="result-actions">
+          <a href="my-rides.html" class="btn btn--primary" id="viewRidesBtn">
+            <i class="fa fa-route"></i> View My Rides
+          </a>
+          <a href="index.html" class="btn btn--outline">
+            <i class="fa fa-home"></i> Back to Home
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FAILURE / PENDING STATE ── -->
+    <div class="state-failure" id="stateFailure" style="display:none;">
+      <div class="result-banner">
+        <div class="failure-icon">✕</div>
+        <h1 id="failureTitle">Payment Not Completed</h1>
+        <p id="failureSubtitle">Your payment was not successful.</p>
+      </div>
+      <div class="result-body">
+        <div style="margin-bottom:16px;">
+          <span class="status-pill" id="failureStatusPill"><i class="fa fa-clock"></i> <span id="failureStatusText">Pending</span></span>
+        </div>
+        <p style="color:#5a6478; font-size:14px; margin-bottom:22px; line-height:1.6;">
+          Don't worry — your booking is saved. You can retry the payment or come back later.
+          No duplicate booking will be created.
+        </p>
+        <!-- Retry payment button -->
+        <button class="retry-btn" id="retryBtn" onclick="retryPayment()">
+          <i class="fa fa-redo"></i> Retry Payment
+        </button>
+        <div class="result-actions">
+          <a href="my-rides.html" class="btn btn--outline">
+            <i class="fa fa-route"></i> My Rides
+          </a>
+          <a href="index.html" class="btn btn--outline">
+            <i class="fa fa-home"></i> Home
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="api.config.js?v=9"></script>
+<script src="include.js?v=9"></script>
+<script src="payment-result.js?v=1"></script>
+</body>
+</html>

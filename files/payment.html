@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Payment - Vazraa Mobility</title>
+<meta name="description" content="Complete your Vazraa ride booking payment securely powered by Cashfree Payments.">
+<link rel="icon" href="images/vazraa-logo.jpeg">
+<link rel="stylesheet" href="style.css?v=9">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<!-- Cashfree JS SDK (official) -->
+<script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+<style>
+  /* ── Payment Page Styles ─────────────────────────────────────────────────── */
+  .payment-section {
+    min-height: calc(100vh - 140px);
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+  }
+
+  .payment-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+    width: 100%;
+    max-width: 520px;
+    overflow: hidden;
+    animation: slideUp 0.4s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header Banner ── */
+  .payment-banner {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .payment-banner .lock-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(245,166,35,0.15);
+    border: 2px solid rgba(245,166,35,0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .payment-banner-text h2 {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .payment-banner-text p {
+    color: rgba(255,255,255,0.55);
+    font-size: 13px;
+  }
+
+  /* ── Booking Summary ── */
+  .payment-body {
+    padding: 28px 32px;
+  }
+
+  .booking-ref {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fd;
+    border: 1px solid #e8ecf5;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+  }
+  .booking-ref-label { font-size: 12px; color: #8993a4; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .booking-ref-number { font-size: 15px; font-weight: 700; color: #1b2434; font-family: 'Courier New', monospace; }
+
+  .trip-summary { margin-bottom: 24px; }
+  .trip-summary h3 { font-size: 12px; color: #8993a4; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
+
+  .trip-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f2f8;
+  }
+  .trip-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .trip-row-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #f0f2f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .trip-row-content { flex: 1; }
+  .trip-row-label { font-size: 11px; color: #8993a4; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
+  .trip-row-value { font-size: 14px; color: #1b2434; font-weight: 600; margin-top: 2px; }
+
+  /* ── Amount Box ── */
+  .amount-box {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border-radius: 14px;
+    padding: 22px 24px;
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .amount-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(245,166,35,0.12) 0%, transparent 60%);
+  }
+  .amount-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; margin-bottom: 6px; position: relative; }
+  .amount-value { font-size: 38px; font-weight: 800; color: #f5a623; position: relative; line-height: 1.1; }
+  .amount-sub { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; position: relative; }
+
+  /* ── CTA Button ── */
+  .pay-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #f5a623, #d98f12);
+    color: #1a1a1a;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+    margin-bottom: 16px;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 15px rgba(245,166,35,0.35);
+  }
+  .pay-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(245,166,35,0.45);
+  }
+  .pay-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .pay-btn .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(26,26,26,0.3);
+    border-top-color: #1a1a1a;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .pay-btn.loading .spinner { display: block; }
+  .pay-btn.loading .btn-icon { display: none; }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Powered by + Security ── */
+  .payment-footer {
+    text-align: center;
+  }
+  .powered-by {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #8993a4;
+    margin-bottom: 10px;
+  }
+  .powered-by strong { color: #1b2434; }
+  .security-badges {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-size: 11px;
+    color: #aab3c2;
+  }
+  .security-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .security-badge i { color: #1fa971; font-size: 10px; }
+
+  /* ── Error State ── */
+  .payment-error {
+    display: none;
+    background: #fff5f5;
+    border: 1px solid #ffcccc;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    color: #c0392b;
+    font-size: 13px;
+    font-weight: 500;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .payment-error.show { display: flex; }
+  .payment-error i { flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Loading State (initial page load) ── */
+  .init-loading {
+    text-align: center;
+    padding: 40px 32px;
+  }
+  .init-loading .spinner-large {
+    width: 44px;
+    height: 44px;
+    border: 3px solid #e8ecf5;
+    border-top-color: #f5a623;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  .init-loading p { color: #8993a4; font-size: 14px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 540px) {
+    .payment-body { padding: 20px; }
+    .payment-banner { padding: 20px; }
+    .amount-value { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<section class="payment-section" id="paymentSection">
+  <div class="payment-card" id="paymentCard">
+
+    <!-- ── Banner ── -->
+    <div class="payment-banner">
+      <div class="lock-icon">🔒</div>
+      <div class="payment-banner-text">
+        <h2>Secure Payment</h2>
+        <p>Powered by Cashfree Payments</p>
+      </div>
+    </div>
+
+    <!-- ── Loading state shown while creating payment order ── -->
+    <div class="init-loading" id="initLoading">
+      <div class="spinner-large"></div>
+      <p>Preparing your payment…</p>
+    </div>
+
+    <!-- ── Main payment body (shown after order is created) ── -->
+    <div class="payment-body" id="paymentBody" style="display:none;">
+
+      <!-- Booking number -->
+      <div class="booking-ref">
+        <span class="booking-ref-label">Booking Reference</span>
+        <span class="booking-ref-number" id="bookingRefNumber">—</span>
+      </div>
+
+      <!-- Trip summary -->
+      <div class="trip-summary">
+        <h3>Trip Details</h3>
+        <div class="trip-row">
+          <div class="trip-row-icon">📍</div>
+          <div class="trip-row-content">
+            <div class="trip-row-label">Pickup</div>
+            <div class="trip-row-value" id="payPickup">—</div>
+          </div>
+        </div>
+        <div class="trip-row">
+          <div class="trip-row-icon">🏁</div>
+          <div class="trip-row-content">
+            <div class="trip-row-label">Drop</div>
+            <div class="trip-row-value" id="payDrop">—</div>
+          </div>
+        </div>
+        <div class="trip-row">
+          <div class="trip-row-icon">🚗</div>
+          <div class="trip-row-content">
+            <div class="trip-row-label">Vehicle</div>
+            <div class="trip-row-value" id="payVehicle">—</div>
+          </div>
+        </div>
+        <div class="trip-row">
+          <div class="trip-row-icon">📅</div>
+          <div class="trip-row-content">
+            <div class="trip-row-label">Date &amp; Time</div>
+            <div class="trip-row-value" id="payDateTime">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Amount -->
+      <div class="amount-box">
+        <div class="amount-label">Amount to Pay</div>
+        <div class="amount-value" id="payAmount">₹—</div>
+        <div class="amount-sub">Inclusive of all taxes &amp; fees</div>
+      </div>
+
+      <!-- Error box -->
+      <div class="payment-error" id="paymentError" role="alert">
+        <i class="fa fa-exclamation-circle"></i>
+        <span id="paymentErrorText">An error occurred. Please try again.</span>
+      </div>
+
+      <!-- CTA -->
+      <button class="pay-btn" id="payBtn" type="button" onclick="initiatePayment()">
+        <div class="spinner"></div>
+        <i class="fa fa-lock btn-icon"></i>
+        Proceed to Secure Payment
+      </button>
+
+      <!-- Security footer -->
+      <div class="payment-footer">
+        <div class="powered-by">
+          <i class="fa fa-shield-alt" style="color:#1fa971;"></i>
+          Secured by <strong>Cashfree Payments</strong>
+        </div>
+        <div class="security-badges">
+          <span class="security-badge"><i class="fa fa-check-circle"></i> 256-bit SSL</span>
+          <span class="security-badge"><i class="fa fa-check-circle"></i> PCI DSS Compliant</span>
+          <span class="security-badge"><i class="fa fa-check-circle"></i> 3D Secure</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="api.config.js?v=9"></script>
+<script src="include.js?v=9"></script>
+<script src="payment.js?v=1"></script>
+</body>
+</html>

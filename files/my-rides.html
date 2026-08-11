@@ -97,6 +97,20 @@
     return `<span class="h-status ${s}">${status}</span>`;
   }
 
+  // ── Payment status badge ──
+  function paymentBadge(paymentStatus) {
+    const ps = (paymentStatus || 'Pending').toLowerCase();
+    const colorMap = { paid: '#1fa971', pending: '#d98f12', failed: '#c0392b', refunded: '#5a6478' };
+    const bgMap    = { paid: '#e6f9f0', pending: '#fff4e0', failed: '#fff0f0', refunded: '#f0f2f8' };
+    const iconMap  = { paid: 'fa-check-circle', pending: 'fa-clock', failed: 'fa-times-circle', refunded: 'fa-undo' };
+    const color    = colorMap[ps] || '#8993a4';
+    const bg       = bgMap[ps]    || '#f5f7fb';
+    const icon     = iconMap[ps]  || 'fa-circle';
+    return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;background:${bg};color:${color};">
+      <i class="fa ${icon}"></i> Payment: ${paymentStatus || 'Pending'}
+    </span>`;
+  }
+
   // ── Format date ──
   function fmtDate(d) {
     if (!d) return '—';
@@ -158,8 +172,16 @@
             <div class="m-label">Ride OTP</div>
             <div class="m-value otp">${booking.rideOtp || '—'}</div>
           </div>
+          <div class="meta-item" style="flex-basis:100%;">
+            <div class="m-label">Payment</div>
+            <div class="m-value">${paymentBadge(booking.paymentStatus)}</div>
+          </div>
         </div>
         <div class="active-card-actions">
+          ${(booking.paymentStatus === 'Pending' || booking.paymentStatus === 'Failed') ? `
+            <a href="payment.html?bookingId=${booking._id}" style="display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:linear-gradient(135deg,#f5a623,#d98f12);color:#1a1a1a;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;margin-right:8px;">
+              <i class="fa fa-credit-card"></i> Pay Now
+            </a>` : ''}
           ${isCancellable ? `
             <button class="btn-cancel-ride" id="cancelBtn" onclick="openCancelModal('${booking._id}')">
               <i class="fa fa-times-circle"></i> Cancel Ride
@@ -185,6 +207,7 @@
             <span><i class="fa fa-calendar"></i>${fmtDate(b.scheduledDate)}</span>
             <span><i class="fa fa-hashtag"></i>${b.bookingNumber || '—'}</span>
           </div>
+          <div style="margin-top:6px;">${paymentBadge(b.paymentStatus)}</div>
         </div>
         <div class="history-right">
           <div class="h-fare">₹${b.estimatedFare || '—'}</div>

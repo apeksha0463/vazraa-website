@@ -67,6 +67,12 @@ const bookingSchema = new mongoose.Schema(
     // Cancellation
     cancelledBy:  { type: String },   // 'customer' | 'driver' | 'admin'
     cancelReason: { type: String },
+
+    // ─── Cashfree Payment Fields ─────────────────────────────────────────────
+    cashfreeOrderId:          { type: String, default: null },
+    cashfreePaymentSessionId: { type: String, default: null },
+    paymentAmount:            { type: Number, default: null },  // confirmed amount at time of order creation
+    paymentUpdatedAt:         { type: Date,   default: null },
   },
   {
     timestamps: true,
@@ -76,5 +82,6 @@ const bookingSchema = new mongoose.Schema(
 bookingSchema.index({ customerId: 1 });
 bookingSchema.index({ driverId: 1 });
 bookingSchema.index({ bookingStatus: 1 });
+bookingSchema.index({ cashfreeOrderId: 1 }, { sparse: true }); // for webhook lookups
 
 module.exports = mongoose.model('Booking', bookingSchema);

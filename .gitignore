@@ -6,10 +6,13 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # Environment / Secret Files
+.env
 .env.local
 .env.production
 .env.development
 .env.test
+backend/.env
+
 
 # Logs
 logs/

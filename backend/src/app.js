@@ -20,6 +20,7 @@ const vehicleRoutes  = require('./routes/vehicle.routes');
 const webhookRoutes  = require('./routes/webhook.routes');
 const adminRoutes    = require('./routes/admin.routes');
 const settingsRoutes = require('./routes/settings.routes');
+const paymentRoutes  = require('./routes/payment.routes');
 
 const errorHandler   = require('./middleware/errorHandler');
 const notFound       = require('./middleware/notFound');
@@ -83,7 +84,17 @@ app.use('/api/auth', authLimiter);
 app.use('/api/admin/login', authLimiter);
 
 // ─── Request Parsing ───────────────────────────────────────────────────────────
-app.use(express.json({ limit: '10mb' }));
+// Use express.json with a verify callback to capture rawBody for Cashfree webhook
+// signature verification. This is the correct approach — avoids stream conflicts.
+app.use(express.json({
+  limit: '10mb',
+  verify: (req, res, buf) => {
+    // Only store rawBody for the webhook endpoint (used for HMAC-SHA256 verification)
+    if (req.url && req.url.startsWith('/api/payments/webhook')) {
+      req.rawBody = buf.toString('utf8');
+    }
+  },
+}));
 app.use(express.urlencoded({ extended: true }));
 
 // ─── Logging ───────────────────────────────────────────────────────────────────
@@ -129,6 +140,7 @@ app.use('/api/vehicles',  vehicleRoutes);
 app.use('/api/webhooks',  webhookRoutes);
 app.use('/api/admin',     adminRoutes);
 app.use('/api/settings',  settingsRoutes);
+app.use('/api/payments',  paymentRoutes);
 
 // ─── 404 & Error Handlers ─────────────────────────────────────────────────────
 app.use(notFound);

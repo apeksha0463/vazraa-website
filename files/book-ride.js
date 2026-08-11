@@ -118,14 +118,14 @@ function setupBookRidePage() {
         const data = await response.json();
 
         if (data.success) {
-          // Save booking reference so the confirm page can read it
+          // Save booking reference so the payment page can read it
           localStorage.setItem("vazraa_last_booking", JSON.stringify(data.data));
 
-          btn.textContent = "Booked! Redirecting…";
+          btn.textContent = "Booked! Redirecting to payment…";
 
-          // Redirect to the confirmation page
+          // Redirect to the payment page (not booking-confirm — payment must happen first)
           setTimeout(() => {
-            window.location.href = "booking-confirm.html";
+            window.location.href = "payment.html";
           }, 800);
         } else {
           errorBox.textContent = data.message || "Booking failed. Please try again.";
