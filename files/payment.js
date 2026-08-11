@@ -43,6 +43,9 @@
   let currentPaymentSessionId = null;
   let currentBookingId        = null;
 
+  // Disable pay button until session is ready
+  if (payBtn) { payBtn.disabled = true; payBtn.style.opacity = '0.6'; }
+
   // ─── Show/hide helpers ────────────────────────────────────────────────────
   function showError(msg) {
     paymentErrorText.textContent = msg || 'An error occurred. Please try again.';
@@ -251,6 +254,10 @@
     // Success — populate authoritative data from backend
     const orderData = result.data.data;
     currentPaymentSessionId = orderData.paymentSessionId;
+    currentBookingId = orderData.bookingId || bookingId;
+
+    // Enable pay button now that session is ready
+    if (payBtn) { payBtn.disabled = false; payBtn.style.opacity = ''; }
 
     populateFromBackend(orderData);
   });
