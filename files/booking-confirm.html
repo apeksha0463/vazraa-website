@@ -238,14 +238,20 @@
         title: "Pickup Location",
       });
 
-      // Car Marker
+      // Car Marker (using SVG path so we can rotate it)
       carMarker = new google.maps.Marker({
         position: { lat: startLat, lng: startLng },
         map: map,
         title: "Your Driver",
         icon: {
-          url: "https://maps.google.com/mapfiles/ms/icons/cabs.png",
-          scaledSize: new google.maps.Size(32, 32)
+          path: "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-12.34L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z",
+          scale: 0.7,
+          fillColor: "#000000",
+          fillOpacity: 1,
+          strokeWeight: 1,
+          strokeColor: "#ffffff",
+          anchor: new google.maps.Point(11.5, 23.5), // Center of the 23x47 car vector
+          rotation: 0
         }
       });
 
@@ -310,8 +316,25 @@
       let newPos = new google.maps.LatLng(currentLat, currentLng);
       carMarker.setPosition(newPos);
       
-      // Keep map centered on the car to show it moving zoomed in
-      map.setCenter(newPos);
+      // Calculate bearing for car orientation
+      const rad = Math.PI / 180;
+      const lat1 = p1.lat() * rad;
+      const lat2 = p2.lat() * rad;
+      const dLng = (p2.lng() - p1.lng()) * rad;
+      const y = Math.sin(dLng) * Math.cos(lat2);
+      const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+      const heading = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+
+      // Update rotation
+      let icon = carMarker.getIcon();
+      icon.rotation = heading;
+      carMarker.setIcon(icon);
+      
+      // Fit both the pickup and car in frame so it looks realistic
+      let bound = new google.maps.LatLngBounds();
+      bound.extend(pickupMarker.getPosition());
+      bound.extend(carMarker.getPosition());
+      map.fitBounds(bound, { bottom: 20, left: 20, right: 20, top: 20 });
 
       if (progress < 1.0) {
         requestAnimationFrame(animateCarAlongRoute);
