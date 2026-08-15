@@ -67,12 +67,9 @@ function setupBookRidePage() {
 
   function saveDraft() {
     const draft = {
-      from:       document.getElementById('rideFrom')?.value || '',
-      to:         document.getElementById('rideTo')?.value   || '',
-      date:       document.getElementById('rideDate')?.value || '',
-      time:       document.getElementById('rideTime')?.value || '',
-      passengers: document.getElementById('ridePassengers')?.value || '',
-      vehicle:    selectedCategory || '',
+      from:    document.getElementById('rideFrom')?.value || '',
+      to:      document.getElementById('rideTo')?.value   || '',
+      vehicle: selectedCategory || '',
     };
     localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
   }
@@ -82,17 +79,11 @@ function setupBookRidePage() {
       const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
       if (!draft) return;
 
-      const fromEl  = document.getElementById('rideFrom');
-      const toEl    = document.getElementById('rideTo');
-      const dateEl  = document.getElementById('rideDate');
-      const timeEl  = document.getElementById('rideTime');
-      const passEl  = document.getElementById('ridePassengers');
+      const fromEl = document.getElementById('rideFrom');
+      const toEl   = document.getElementById('rideTo');
 
-      if (fromEl  && draft.from)       fromEl.value  = draft.from;
-      if (toEl    && draft.to)         toEl.value    = draft.to;
-      if (dateEl  && draft.date)       dateEl.value  = draft.date;
-      if (timeEl  && draft.time)       timeEl.value  = draft.time;
-      if (passEl  && draft.passengers) passEl.value  = draft.passengers;
+      if (fromEl && draft.from) fromEl.value = draft.from;
+      if (toEl   && draft.to)   toEl.value   = draft.to;
 
       // Re-select the vehicle card
       if (draft.vehicle) {
@@ -143,7 +134,7 @@ function setupBookRidePage() {
   }
 
   // ─── Wire up auto-save on every input change ──────────────────────────────
-  ['rideFrom', 'rideTo', 'rideDate', 'rideTime', 'ridePassengers'].forEach(id => {
+  ['rideFrom', 'rideTo'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('input', saveDraft);
     if (el) el.addEventListener('change', saveDraft);
@@ -264,15 +255,12 @@ function setupBookRidePage() {
     `;
 
     document.getElementById('confirmBookingBtn').addEventListener('click', async () => {
-      const from       = document.getElementById('rideFrom').value.trim();
-      const to         = document.getElementById('rideTo').value.trim();
-      const date       = document.getElementById('rideDate').value;
-      const time       = document.getElementById('rideTime').value;
-      const passengers = document.getElementById('ridePassengers')?.value || '1 Passenger';
-      const errorBox   = document.getElementById('confirmError');
-      const btn        = document.getElementById('confirmBookingBtn');
+      const from = document.getElementById('rideFrom').value.trim();
+      const to   = document.getElementById('rideTo').value.trim();
+      const errorBox = document.getElementById('confirmError');
+      const btn      = document.getElementById('confirmBookingBtn');
 
-      if (!from || !to || !date || !time) {
+      if (!from || !to) {
         errorBox.classList.add('show');
         return;
       }
@@ -318,9 +306,6 @@ function setupBookRidePage() {
             drop:            to,
             vehicleType:     selectedType,
             vehicleCategory: selectedCategory,
-            scheduledDate:   date,
-            scheduledTime:   time,
-            passengers,
             estimatedDistanceKm: realDistanceKm || distance,
             pickupCoords,
             dropCoords,
