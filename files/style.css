@@ -331,11 +331,10 @@ h2.center { text-align: center; margin-bottom: 44px; }
 .booking-tabs .tab:not(.active):hover { background: var(--gray-100); }
 
 .booking-form {
-  display: grid;
-  grid-template-columns: 1.3fr 1.3fr 1fr 1fr auto;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   padding: 22px 24px;
-  align-items: end;
 }
 .field { display: flex; flex-direction: column; gap: 6px; position: relative; }
 .field label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
@@ -363,7 +362,7 @@ h2.center { text-align: center; margin-bottom: 44px; }
   z-index: 3;
   box-shadow: var(--shadow-sm);
 }
-.btn--search { height: 44px; padding: 0 26px; }
+.btn--search { height: 48px; width: 100%; margin-top: 8px; justify-content: center; }
 
 .booking-perks {
   display: flex;
