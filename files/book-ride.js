@@ -226,6 +226,19 @@ function setupBookRidePage() {
   });
 
   // ─── Render Fare Card ──────────────────────────────────────────────────────
+  // ─── Show fare placeholder with button immediately on vehicle select ─────────
+  function showVehicleSelectedState() {
+    if (!selectedRate) return;
+    fareContent.innerHTML = `
+      <div class="fare-row"><span>Vehicle Type</span><span>${selectedType}</span></div>
+      <div class="fare-row" style="color:var(--gray-400);font-size:13px;"><span>Calculating fare…</span><span><i class="fa fa-spinner fa-spin"></i></span></div>
+      <button type="button" class="btn btn--primary btn--submit" id="confirmBookingBtn" style="margin-top:16px;">Confirm Booking</button>
+      <div class="form-error" id="confirmError" style="margin-top:10px;">Please fill in both pickup and drop locations first.</div>
+      <div class="booking-success" id="bookingSuccess" style="display:none;"></div>
+    `;
+    wireConfirmButton();
+  }
+
   function renderFare(distance, distLabel, durationLabel) {
     if (!selectedRate) {
       fareContent.innerHTML = `<div class="fare-empty">Select a vehicle type to see your fare estimate.</div>`;
@@ -245,16 +258,27 @@ function setupBookRidePage() {
       <div class="fare-row"><span>Vehicle Type</span><span>${selectedType}</span></div>
       <div class="fare-row"><span>Estimated Distance</span><span>${distLabel || distance + ' km'}</span></div>
       ${durationRow}
-      <div class="fare-row"><span>Base Fare</span><span>₹${base}</span></div>
-      <div class="fare-row"><span>Distance Fare</span><span>₹${distanceFare}</span></div>
-      <div class="fare-row"><span>Platform Fee</span><span>₹${platformFee}</span></div>
-      <div class="fare-row total"><span>Total Estimate</span><span>₹${total}</span></div>
+      <div class="fare-row"><span>Base Fare</span><span>&#8377;${base}</span></div>
+      <div class="fare-row"><span>Distance Fare</span><span>&#8377;${distanceFare}</span></div>
+      <div class="fare-row"><span>Platform Fee</span><span>&#8377;${platformFee}</span></div>
+      <div class="fare-row total"><span>Total Estimate</span><span>&#8377;${total}</span></div>
       <button type="button" class="btn btn--primary btn--submit" id="confirmBookingBtn">Confirm Booking</button>
-      <div class="form-error" id="confirmError" style="margin-top:10px;">Please fill in pickup, drop, date and time first.</div>
+      <div class="form-error" id="confirmError" style="margin-top:10px;">Please fill in both pickup and drop locations first.</div>
       <div class="booking-success" id="bookingSuccess" style="display:none; margin-top:12px; padding:12px; background:#e6f9f0; border-radius:8px; color:#1a7a4a; font-weight:600;"></div>
     `;
 
-    document.getElementById('confirmBookingBtn').addEventListener('click', async () => {
+    wireConfirmButton();
+  }
+
+  function wireConfirmButton() {
+    const btn = document.getElementById('confirmBookingBtn');
+    if (!btn) return;
+    
+    // Prevent multiple listeners
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+
+    newBtn.addEventListener('click', async () => {
       const from = document.getElementById('rideFrom').value.trim();
       const to   = document.getElementById('rideTo').value.trim();
       const errorBox = document.getElementById('confirmError');
@@ -274,8 +298,8 @@ function setupBookRidePage() {
         return;
       }
 
-      btn.disabled    = true;
-      btn.textContent = 'Booking…';
+      newBtn.disabled    = true;
+      newBtn.textContent = 'Booking…';
 
       // Extract coordinates if available
       const places = window._getPlaces ? window._getPlaces() : {};
@@ -322,14 +346,14 @@ function setupBookRidePage() {
         } else {
           errorBox.textContent = data.message || 'Booking failed. Please try again.';
           errorBox.classList.add('show');
-          btn.disabled    = false;
-          btn.textContent = 'Confirm Booking';
+          newBtn.disabled    = false;
+          newBtn.textContent = 'Confirm Booking';
         }
       } catch (err) {
-        errorBox.textContent = 'Could not reach server. Please check your connection.';
+        errorBox.textContent = 'Network error. Please check your connection and try again.';
         errorBox.classList.add('show');
-        btn.disabled    = false;
-        btn.textContent = 'Confirm Booking';
+        newBtn.disabled    = false;
+        newBtn.textContent = 'Confirm Booking';
       }
     });
   }
