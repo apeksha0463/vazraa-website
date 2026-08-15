@@ -201,10 +201,11 @@
     }, 1000);
 
     // ─── Map & Driver Simulation Logic ───
-    let map, pickupMarker, carMarker;
+    let map, pickupMarker, carMarker, routePolyline;
     let startLat, startLng, endLat, endLng;
     let totalAnimationMs = eta * 60 * 1000;
     let animationStartTime = null;
+    let routePath = []; // Array of google.maps.LatLng
 
     function initDriverMap(b) {
       if (typeof google === 'undefined' || !google.maps) {
@@ -217,13 +218,13 @@
       endLat = b?.pickupCoords?.lat || 12.9716;
       endLng = b?.pickupCoords?.lng || 77.5946;
 
-      // Simulate driver starting 1.5km away (roughly 0.015 degrees)
-      startLat = endLat - 0.015;
-      startLng = endLng - 0.015;
+      // Simulate driver starting ~2km away (roughly 0.02 degrees)
+      startLat = endLat - 0.02;
+      startLng = endLng - 0.02;
 
       const mapOptions = {
-        zoom: 14,
-        center: { lat: endLat, lng: endLng },
+        zoom: 16, // Zoomed in closer
+        center: { lat: startLat, lng: startLng },
         disableDefaultUI: true,
         zoomControl: true,
       };
@@ -243,35 +244,77 @@
         map: map,
         title: "Your Driver",
         icon: {
-          url: "https://maps.google.com/mapfiles/ms/icons/cabs.png", // Standard car icon
+          url: "https://maps.google.com/mapfiles/ms/icons/cabs.png",
           scaledSize: new google.maps.Size(32, 32)
         }
       });
 
-      // Start animation
-      animationStartTime = performance.now();
-      requestAnimationFrame(animateCar);
+      // Fetch route from start to end
+      const directionsService = new google.maps.DirectionsService();
+      directionsService.route({
+        origin: { lat: startLat, lng: startLng },
+        destination: { lat: endLat, lng: endLng },
+        travelMode: google.maps.TravelMode.DRIVING
+      }, (response, status) => {
+        if (status === 'OK') {
+          // Draw the route line
+          routePolyline = new google.maps.Polyline({
+            path: response.routes[0].overview_path,
+            geodesic: true,
+            strokeColor: '#2b6cb0', // blue route line
+            strokeOpacity: 0.8,
+            strokeWeight: 4,
+            map: map
+          });
+          routePath = response.routes[0].overview_path;
+        } else {
+          // Fallback to straight line if directions fail
+          routePath = [
+            new google.maps.LatLng(startLat, startLng),
+            new google.maps.LatLng(endLat, endLng)
+          ];
+        }
+
+        // Start animation along the route
+        animationStartTime = performance.now();
+        requestAnimationFrame(animateCarAlongRoute);
+      });
     }
 
-    function animateCar(time) {
-      if (!carMarker) return;
+    function animateCarAlongRoute(time) {
+      if (!carMarker || routePath.length < 2) return;
+      
       let elapsed = time - animationStartTime;
       let progress = Math.min(elapsed / totalAnimationMs, 1.0);
 
-      // Simple linear interpolation
-      let currentLat = startLat + (endLat - startLat) * progress;
-      let currentLng = startLng + (endLng - startLng) * progress;
+      // Find the segment on the path
+      let totalPoints = routePath.length;
+      let exactIndex = progress * (totalPoints - 1);
+      let index1 = Math.floor(exactIndex);
+      let index2 = Math.ceil(exactIndex);
 
-      carMarker.setPosition({ lat: currentLat, lng: currentLng });
+      if (index1 >= totalPoints - 1) {
+        carMarker.setPosition(routePath[totalPoints - 1]);
+        map.setCenter(routePath[totalPoints - 1]);
+        return;
+      }
 
-      // Keep map centered between car and pickup
-      let bound = new google.maps.LatLngBounds();
-      bound.extend(pickupMarker.getPosition());
-      bound.extend(carMarker.getPosition());
-      map.fitBounds(bound);
+      let p1 = routePath[index1];
+      let p2 = routePath[index2];
+      
+      // Interpolate between p1 and p2
+      let segmentProgress = exactIndex - index1;
+      let currentLat = p1.lat() + (p2.lat() - p1.lat()) * segmentProgress;
+      let currentLng = p1.lng() + (p2.lng() - p1.lng()) * segmentProgress;
+
+      let newPos = new google.maps.LatLng(currentLat, currentLng);
+      carMarker.setPosition(newPos);
+      
+      // Keep map centered on the car to show it moving zoomed in
+      map.setCenter(newPos);
 
       if (progress < 1.0) {
-        requestAnimationFrame(animateCar);
+        requestAnimationFrame(animateCarAlongRoute);
       }
     }
   </script>
