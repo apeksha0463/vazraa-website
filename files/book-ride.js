@@ -213,6 +213,23 @@ function setupBookRidePage() {
       btn.disabled    = true;
       btn.textContent = 'Booking…';
 
+      // Extract coordinates if available
+      const places = window._getPlaces ? window._getPlaces() : {};
+      let pickupCoords = null;
+      let dropCoords   = null;
+      if (places.originPlace && places.originPlace.geometry) {
+        pickupCoords = {
+          lat: places.originPlace.geometry.location.lat(),
+          lng: places.originPlace.geometry.location.lng()
+        };
+      }
+      if (places.destinationPlace && places.destinationPlace.geometry) {
+        dropCoords = {
+          lat: places.destinationPlace.geometry.location.lat(),
+          lng: places.destinationPlace.geometry.location.lng()
+        };
+      }
+
       try {
         const response = await fetch(`${getBaseUrl()}/api/bookings`, {
           method:  'POST',
@@ -229,6 +246,8 @@ function setupBookRidePage() {
             scheduledTime:   time,
             passengers,
             estimatedDistanceKm: realDistanceKm || distance,
+            pickupCoords,
+            dropCoords,
           }),
         });
 

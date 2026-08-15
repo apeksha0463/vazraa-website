@@ -34,7 +34,10 @@
         <span class="eta-unit">mins</span>
       </div>
       <div class="eta-progress"><div class="eta-progress-fill"></div></div>
-  
+
+      <!-- ── Live Map ── -->
+      <div id="driverMap" style="height: 250px; width: 100%; border-radius: 12px; margin-bottom: 24px; background: #e2e8f0; border: 1px solid var(--border);"></div>
+
       <!-- ── Driver ── -->
       <div class="driver-section">
         <h3>Your Driver</h3>
@@ -164,6 +167,7 @@
 
     // Initial render from local storage
     renderBookingUI(booking);
+    initDriverMap(booking); // Initialize map
 
     // Fetch fresh details if targetBookingId is available
     if (targetBookingId && getToken()) {
@@ -195,6 +199,83 @@
       document.getElementById('etaMinutes').textContent =
         minutes > 0 ? minutes : `< 1`;
     }, 1000);
+
+    // ─── Map & Driver Simulation Logic ───
+    let map, pickupMarker, carMarker;
+    let startLat, startLng, endLat, endLng;
+    let totalAnimationMs = eta * 60 * 1000;
+    let animationStartTime = null;
+
+    function initDriverMap(b) {
+      if (typeof google === 'undefined' || !google.maps) {
+        // Wait for Maps API to load if it hasn't yet
+        setTimeout(() => initDriverMap(b), 500);
+        return;
+      }
+
+      // Default to Bangalore if no coords
+      endLat = b?.pickupCoords?.lat || 12.9716;
+      endLng = b?.pickupCoords?.lng || 77.5946;
+
+      // Simulate driver starting 1.5km away (roughly 0.015 degrees)
+      startLat = endLat - 0.015;
+      startLng = endLng - 0.015;
+
+      const mapOptions = {
+        zoom: 14,
+        center: { lat: endLat, lng: endLng },
+        disableDefaultUI: true,
+        zoomControl: true,
+      };
+
+      map = new google.maps.Map(document.getElementById("driverMap"), mapOptions);
+
+      // Pickup Marker
+      pickupMarker = new google.maps.Marker({
+        position: { lat: endLat, lng: endLng },
+        map: map,
+        title: "Pickup Location",
+      });
+
+      // Car Marker
+      carMarker = new google.maps.Marker({
+        position: { lat: startLat, lng: startLng },
+        map: map,
+        title: "Your Driver",
+        icon: {
+          url: "https://maps.google.com/mapfiles/ms/icons/cabs.png", // Standard car icon
+          scaledSize: new google.maps.Size(32, 32)
+        }
+      });
+
+      // Start animation
+      animationStartTime = performance.now();
+      requestAnimationFrame(animateCar);
+    }
+
+    function animateCar(time) {
+      if (!carMarker) return;
+      let elapsed = time - animationStartTime;
+      let progress = Math.min(elapsed / totalAnimationMs, 1.0);
+
+      // Simple linear interpolation
+      let currentLat = startLat + (endLat - startLat) * progress;
+      let currentLng = startLng + (endLng - startLng) * progress;
+
+      carMarker.setPosition({ lat: currentLat, lng: currentLng });
+
+      // Keep map centered between car and pickup
+      let bound = new google.maps.LatLngBounds();
+      bound.extend(pickupMarker.getPosition());
+      bound.extend(carMarker.getPosition());
+      map.fitBounds(bound);
+
+      if (progress < 1.0) {
+        requestAnimationFrame(animateCar);
+      }
+    }
   </script>
+  <!-- Google Maps JS API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeaWASPnmwsuems5mpGZ77tKNGEf6UFwY" async defer></script>
 </body>
 </html>
