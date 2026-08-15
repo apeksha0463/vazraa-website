@@ -62,17 +62,92 @@ function setupBookRidePage() {
     return localStorage.getItem('vazraa_token') || '';
   }
 
-  // ─── Prefill from query params ─────────────────────────────────────────────
+  // ─── Draft Auto-Save / Auto-Restore ─────────────────────────────────────
+  const DRAFT_KEY = 'vazraa_booking_draft';
+
+  function saveDraft() {
+    const draft = {
+      from:       document.getElementById('rideFrom')?.value || '',
+      to:         document.getElementById('rideTo')?.value   || '',
+      date:       document.getElementById('rideDate')?.value || '',
+      time:       document.getElementById('rideTime')?.value || '',
+      passengers: document.getElementById('ridePassengers')?.value || '',
+      vehicle:    selectedCategory || '',
+    };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+  }
+
+  function restoreDraft() {
+    try {
+      const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+      if (!draft) return;
+
+      const fromEl  = document.getElementById('rideFrom');
+      const toEl    = document.getElementById('rideTo');
+      const dateEl  = document.getElementById('rideDate');
+      const timeEl  = document.getElementById('rideTime');
+      const passEl  = document.getElementById('ridePassengers');
+
+      if (fromEl  && draft.from)       fromEl.value  = draft.from;
+      if (toEl    && draft.to)         toEl.value    = draft.to;
+      if (dateEl  && draft.date)       dateEl.value  = draft.date;
+      if (timeEl  && draft.time)       timeEl.value  = draft.time;
+      if (passEl  && draft.passengers) passEl.value  = draft.passengers;
+
+      // Re-select the vehicle card
+      if (draft.vehicle) {
+        const match = grid.querySelector(`[data-type="${draft.vehicle}"]`);
+        if (match) match.click();
+      }
+
+      // Show a subtle toast so the user knows their data was restored
+      if (draft.from || draft.to || draft.date) {
+        showRestoredToast();
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  function clearDraft() {
+    localStorage.removeItem(DRAFT_KEY);
+  }
+
+  function showRestoredToast() {
+    const toast = document.createElement('div');
+    toast.textContent = '✅ Your previous details have been restored!';
+    toast.style.cssText = `
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #1a7a4a; color: #fff; padding: 12px 24px;
+      border-radius: 999px; font-size: 13px; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999;
+      animation: fadeInUp .3s ease;
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+  }
+
+  // ─── Prefill from query params (takes priority over draft) ─────────────────
   const params = new URLSearchParams(window.location.search);
   if (params.get('from')) document.getElementById('rideFrom').value = params.get('from');
   if (params.get('to'))   document.getElementById('rideTo').value   = params.get('to');
   if (params.get('date')) document.getElementById('rideDate').value  = params.get('date');
+
+  // Restore draft if no query params were provided
+  if (!params.get('from') && !params.get('to')) {
+    restoreDraft();
+  }
 
   const preselectType = params.get('type');
   if (preselectType) {
     const match = grid.querySelector(`[data-type="${preselectType}"]`);
     if (match) match.click();
   }
+
+  // ─── Wire up auto-save on every input change ──────────────────────────────
+  ['rideFrom', 'rideTo', 'rideDate', 'rideTime', 'ridePassengers'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', saveDraft);
+    if (el) el.addEventListener('change', saveDraft);
+  });
 
   // ─── Vehicle selection ─────────────────────────────────────────────────────
   grid.querySelectorAll('.vehicle-option').forEach(option => {
@@ -82,6 +157,7 @@ function setupBookRidePage() {
       selectedRate     = Number(option.dataset.rate);
       selectedCategory = option.dataset.type;
       selectedType     = option.querySelector('h4').textContent;
+      saveDraft(); // save selected vehicle to draft
 
       // If we already have a real distance, update fare immediately
       if (realDistanceKm !== null) {
@@ -254,6 +330,7 @@ function setupBookRidePage() {
         const data = await response.json();
 
         if (data.success) {
+          clearDraft(); // booking confirmed — wipe the saved draft
           localStorage.setItem('vazraa_last_booking', JSON.stringify(data.data));
           btn.textContent = 'Booked! Redirecting to payment…';
           setTimeout(() => { window.location.href = 'payment.html'; }, 800);
