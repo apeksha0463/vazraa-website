@@ -33,6 +33,35 @@
     <!-- Booking Widget -->
     <div class="booking-card">
       <div class="booking-tabs">
+<link rel="icon" href="images/vazraa-logo.jpeg">
+<link rel="stylesheet" href="style.css?v=4">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<!-- ===== HEADER / NAVBAR ===== -->
+<div id="site-header"></div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <h1>One Platform.<br>Every Ride. Every Need.</h1>
+      <p>Vazraa Mobility is your comprehensive transport booking ecosystem for every journey, every vehicle, every time.</p>
+
+      <ul class="hero__badges">
+        <li><i class="fas fa-car-side"></i> Wide Choice <span>1000+ Vehicles</span></li>
+        <li><i class="fas fa-shield-alt"></i> Trusted Partners <span>Verified & Safe</span></li>
+        <li><i class="fas fa-tags"></i> Best Prices <span>Transparent & Fair</span></li>
+      </ul>
+    </div>
+
+    <!-- Booking Widget -->
+    <div class="booking-card">
+      <div class="booking-tabs">
         <button class="tab active" data-tab="oneway"><i class="fas fa-exchange-alt"></i> One Way / Round Trip</button>
         <button class="tab" data-tab="hourly"><i class="fas fa-clock"></i> Hourly Rental</button>
         <button class="tab" data-tab="outstation"><i class="fas fa-route"></i> Outstation</button>
@@ -42,12 +71,12 @@
       <form class="booking-form" id="bookingForm">
         <div class="field field--swap">
           <label>From</label>
-          <input type="text" placeholder="Enter pickup location">
+          <input type="text" id="heroFrom" placeholder="Enter pickup location">
           <button type="button" class="swap-btn" id="swapBtn" aria-label="Swap locations"><i class="fas fa-exchange-alt"></i></button>
         </div>
         <div class="field">
           <label>To</label>
-          <input type="text" placeholder="Enter drop location">
+          <input type="text" id="heroTo" placeholder="Enter drop location">
         </div>
         <div class="field">
           <label>Date</label>
@@ -146,7 +175,18 @@
 <!-- ===== FOOTER ===== -->
 <div id="site-footer"></div>
 
-<script src="script.js?v=4"></script>
+<script src="script.js?v=8"></script>
 <script src="include.js?v=5"></script>
+<script>
+// Hero widget autocomplete
+window.initHeroAutocomplete = function() {
+  var opts = { componentRestrictions: { country: 'in' }, fields: ['formatted_address','name'] };
+  var fromEl = document.getElementById('heroFrom');
+  var toEl   = document.getElementById('heroTo');
+  if (fromEl) new google.maps.places.Autocomplete(fromEl, opts);
+  if (toEl)   new google.maps.places.Autocomplete(toEl,   opts);
+};
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeaWASPnmwsuems5mpGZ77tKNGEf6UFwY&libraries=places&callback=initHeroAutocomplete" async defer></script>
 </body>
 </html>
