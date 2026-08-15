@@ -30,45 +30,17 @@
       </ul>
     </div>
 
-    <!-- Booking Widget -->
-    <div class="booking-card">
-      <div class="booking-tabs">
-        <button class="tab active" data-tab="oneway"><i class="fas fa-exchange-alt"></i> One Way / Round Trip</button>
-        <button class="tab" data-tab="hourly"><i class="fas fa-clock"></i> Hourly Rental</button>
-        <button class="tab" data-tab="outstation"><i class="fas fa-route"></i> Outstation</button>
-        <button class="tab" data-tab="monthly"><i class="fas fa-calendar-alt"></i> Monthly Rental</button>
-      </div>
-
-      <form class="booking-form" id="bookingForm">
-        <div class="field field--swap">
-          <label>From</label>
-          <input type="text" id="heroFrom" placeholder="Enter pickup location">
-          <button type="button" class="swap-btn" id="swapBtn" aria-label="Swap locations"><i class="fas fa-exchange-alt"></i></button>
-        </div>
-        <div class="field">
-          <label>To</label>
-          <input type="text" id="heroTo" placeholder="Enter drop location">
-        </div>
-        <div class="field">
-          <label>Date</label>
-          <input type="date" id="dateInput" required>
-        </div>
-        <div class="field">
-          <label>Vehicle Type</label>
-          <select>
-            <option>All Vehicles</option>
-            <option>Cars & Sedans</option>
-            <option>Bikes & Scooters</option>
-          </select>
-        </div>
-        <button type="submit" class="btn btn--primary btn--search"><i class="fas fa-search"></i> Search Vehicles</button>
-      </form>
-
-      <ul class="booking-perks">
+    <!-- Simple Booking CTA -->
+    <div class="booking-card" style="padding: 32px; text-align: center; max-width: 400px; margin-top: 48px;">
+      <h3 style="font-size: 20px; color: var(--blue-900); margin-bottom: 12px;">Ready to ride?</h3>
+      <p style="font-size: 14px; color: var(--gray-600); margin-bottom: 24px;">Book a verified car or bike in seconds.</p>
+      <a href="book-ride.html" class="btn btn--primary" style="width: 100%; height: 50px; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <i class="fas fa-car-side"></i> Book a Vehicle
+      </a>
+      
+      <ul class="booking-perks" style="border: none; padding: 24px 0 0 0; justify-content: center; margin-top: 8px; font-size: 12px; gap: 16px;">
         <li><i class="fas fa-bolt"></i> Instant Booking</li>
         <li><i class="fas fa-lock"></i> Secure Payments</li>
-        <li><i class="fas fa-headset"></i> 24x7 Support</li>
-        <li><i class="fas fa-ban"></i> Free Cancellation*</li>
       </ul>
     </div>
   </div>
@@ -143,16 +115,6 @@
 
 <script src="script.js?v=8"></script>
 <script src="include.js?v=8"></script>
-<script>
-// Hero widget autocomplete
-window.initHeroAutocomplete = function() {
-  var opts = { componentRestrictions: { country: 'in' }, fields: ['formatted_address','name'] };
-  var fromEl = document.getElementById('heroFrom');
-  var toEl   = document.getElementById('heroTo');
-  if (fromEl) new google.maps.places.Autocomplete(fromEl, opts);
-  if (toEl)   new google.maps.places.Autocomplete(toEl,   opts);
-};
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeaWASPnmwsuems5mpGZ77tKNGEf6UFwY&libraries=places&callback=initHeroAutocomplete" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDeaWASPnmwsuems5mpGZ77tKNGEf6UFwY&libraries=places" async defer></script>
 </body>
 </html>
