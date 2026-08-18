@@ -35,8 +35,9 @@ window.initGoogleMapsAutocomplete = function () {
     }
   });
 
-  // Expose getter so book-ride.js can access places
+  // Expose getter and setter so book-ride.js can access places
   window._getPlaces = () => ({ originPlace, destinationPlace });
+  window._setOriginPlace = (place) => { originPlace = place; };
 };
 
 // ─── Book Ride Page Logic ─────────────────────────────────────────────────────
@@ -139,6 +140,58 @@ function setupBookRidePage() {
     if (el) el.addEventListener('input', saveDraft);
     if (el) el.addEventListener('change', saveDraft);
   });
+
+  // ─── Locate Me ──────────────────────────────────────────────────────────────
+  const locateBtn = document.getElementById('locateMeBtn');
+  if (locateBtn) {
+    locateBtn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+      
+      locateBtn.innerHTML = '<i class="fa fa-spinner fa-spin"></i>';
+      
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          
+          if (typeof google === 'undefined' || !google.maps) {
+            document.getElementById('rideFrom').value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+            locateBtn.innerHTML = '<i class="fa fa-crosshairs"></i>';
+            saveDraft();
+            return;
+          }
+
+          const geocoder = new google.maps.Geocoder();
+          geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+            locateBtn.innerHTML = '<i class="fa fa-crosshairs"></i>';
+            if (status === 'OK' && results[0]) {
+              const fromInput = document.getElementById('rideFrom');
+              fromInput.value = results[0].formatted_address;
+              
+              if (typeof window._setOriginPlace === 'function') {
+                window._setOriginPlace(results[0]);
+              }
+              
+              saveDraft();
+              if (typeof window._triggerFareUpdate === 'function') {
+                window._triggerFareUpdate();
+              }
+            } else {
+              alert('Could not find a valid address for your location.');
+            }
+          });
+        },
+        (err) => {
+          locateBtn.innerHTML = '<i class="fa fa-crosshairs"></i>';
+          alert('Location access denied or unavailable. Please type your pickup location.');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    });
+  }
 
   // ─── Vehicle selection ─────────────────────────────────────────────────────
   grid.querySelectorAll('.vehicle-option').forEach(option => {
