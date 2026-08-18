@@ -77,6 +77,18 @@ class AdminController {
   }
 
   /**
+   * PATCH /api/admin/drivers/:id/approve
+   */
+  async approveDriver(req, res, next) {
+    try {
+      const driver = await adminService.approveDriver(req.params.id);
+      return successResponse(res, { driver }, 'Driver approved successfully');
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
    * PUT /api/admin/bookings/:id/status
    */
   async updateBookingStatus(req, res, next) {

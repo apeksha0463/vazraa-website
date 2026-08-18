@@ -64,6 +64,13 @@ class AdminService {
     return driverRepo.update(driverId, { isActive: false, status: DRIVER_STATUS.SUSPENDED });
   }
 
+  async approveDriver(driverId) {
+    return driverRepo.update(driverId, { 
+      isVerified: true,
+      status: 'available' 
+    });
+  }
+
   async updateBookingStatus(bookingId, status) {
     return bookingRepo.updateStatus(bookingId, status);
   }

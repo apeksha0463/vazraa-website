@@ -135,7 +135,7 @@
     }
     const isCancellable = ['pending','confirmed'].includes((booking.bookingStatus||'').toLowerCase());
     wrap.innerHTML = `
-      <div class="active-card">
+      <div class="active-card" style="cursor:pointer;" onclick="if(event.target.closest('button') || event.target.closest('a')) return; window.location.href='booking-confirm.html?id=${booking._id}'">
         <div class="active-card-header">
           <span class="active-label">Active Ride</span>
           <span class="active-booking-number">Booking # ${booking.bookingNumber || '—'}</span>
@@ -199,7 +199,7 @@
       return;
     }
     wrap.innerHTML = `<div class="history-grid">${past.map(b => `
-      <div class="history-card">
+      <div class="history-card" style="cursor:pointer;" onclick="window.location.href='booking-confirm.html?id=${b._id}'">
         <div class="history-left">
           <div class="h-route">${b.pickup || '—'}<span>→</span>${b.drop || '—'}</div>
           <div class="h-meta">
@@ -210,7 +210,7 @@
           <div style="margin-top:6px;">${paymentBadge(b.paymentStatus)}</div>
         </div>
         <div class="history-right">
-          <div class="h-fare">₹${b.estimatedFare || '—'}</div>
+          <div class="h-fare">&#8377;${b.estimatedFare || '—'}</div>
           ${statusBadge(b.bookingStatus)}
         </div>
       </div>`).join('')}</div>`;

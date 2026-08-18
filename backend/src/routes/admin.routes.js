@@ -61,6 +61,9 @@ router.put('/users/:id/suspend',   authenticate, authorizeAdmin, (req, res, next
 router.put('/drivers/:id/suspend', authenticate, authorizeAdmin, (req, res, next) =>
   adminController.suspendDriver(req, res, next));
 
+router.patch('/drivers/:id/approve', authenticate, authorizeAdmin, (req, res, next) =>
+  adminController.approveDriver(req, res, next));
+
 router.put('/bookings/:id/status', authenticate, authorizeAdmin, (req, res, next) =>
   adminController.updateBookingStatus(req, res, next));
 

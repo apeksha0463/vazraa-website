@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load initial data
   loadDashboardData();
   loadBookings();
-  loadUsers();
   loadDrivers();
 });
 
@@ -140,30 +139,6 @@ window.updateBookingStatus = async function(bookingId, newStatus) {
   }
 }
 
-async function loadUsers() {
-  const tbody = document.getElementById('usersTableBody');
-  tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
-  
-  const data = await apiFetch('/api/admin/users');
-  if (data.success && data.data) {
-    const users = data.data.users || [];
-    if (users.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No users found.</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = users.map(u => `
-      <tr>
-        <td><strong>${u.name}</strong></td>
-        <td>${u.email}</td>
-        <td>${u.phone}</td>
-        <td>${formatDate(u.createdAt)}</td>
-        <td><span style="color:${u.isActive ? '#16a34a' : '#ef4444'}">${u.isActive ? 'Active' : 'Suspended'}</span></td>
-      </tr>
-    `).join('');
-  }
-}
-
 async function loadDrivers() {
   const tbody = document.getElementById('driversTableBody');
   tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading...</td></tr>';
@@ -182,8 +157,22 @@ async function loadDrivers() {
         <td>${d.email}</td>
         <td>${d.phone}</td>
         <td>${formatDate(d.createdAt)}</td>
-        <td><span style="color:${d.isActive ? '#16a34a' : '#ef4444'}">${d.isActive ? 'Active' : 'Suspended'}</span></td>
+        <td><span style="color:${d.isActive ? '#16a34a' : '#ef4444'}">${!d.isVerified ? 'Pending' : (d.isActive ? 'Active' : 'Suspended')}</span></td>
+        <td>
+          ${!d.isVerified ? `<button class="btn btn--primary btn--sm" onclick="approveDriver('${d._id}')">Approve</button>` : `<span style="color:#aaa;">Approved</span>`}
+        </td>
       </tr>
     `).join('');
+  }
+}
+
+async function approveDriver(driverId) {
+  if(!confirm('Are you sure you want to approve this driver?')) return;
+  const data = await apiFetch(`/api/admin/drivers/${driverId}/approve`, { method: 'PATCH' });
+  if (data.success) {
+    alert('Driver approved successfully');
+    loadDrivers();
+  } else {
+    alert(data.message || 'Failed to approve driver');
   }
 }

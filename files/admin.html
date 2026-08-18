@@ -106,29 +106,6 @@
 
         <div class="admin-card">
           <div class="admin-card__header">
-            <h3>Customers</h3>
-            <button class="btn btn--primary btn--sm" onclick="loadUsers()"><i class="fa fa-sync-alt"></i> Refresh</button>
-          </div>
-          <div class="admin-table-wrap">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Joined</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="usersTableBody">
-                <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="admin-card">
-          <div class="admin-card__header">
             <h3>Drivers</h3>
             <button class="btn btn--primary btn--sm" onclick="loadDrivers()"><i class="fa fa-sync-alt"></i> Refresh</button>
           </div>
@@ -141,10 +118,11 @@
                   <th>Phone</th>
                   <th>Joined</th>
                   <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="driversTableBody">
-                <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                <tr><td colspan="6" style="text-align:center;">Loading...</td></tr>
               </tbody>
             </table>
           </div>
